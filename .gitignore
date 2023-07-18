@@ -1,0 +1,12 @@
+*.h5
+*.hdf5
+*.zip
+*.tar.gz
+*.npy
+*.txt
+*.pdf
+*.jpg
+*.jpeg
+*.png
+*.npz
+__pycache__/
