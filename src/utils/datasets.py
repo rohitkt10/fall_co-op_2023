@@ -1,3 +1,7 @@
+import numpy as np
+from torch.utils.data import Dataset
+import torch.nn as nn
+
 class DNASequenceDataset(Dataset):
     def __init__(self, sequences, labels, alphabet="ACGT"):
         self.sequences = sequences
