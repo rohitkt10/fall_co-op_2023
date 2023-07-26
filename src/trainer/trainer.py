@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 
 class Trainer:
     """
@@ -13,7 +14,7 @@ class Trainer:
         self._device = d
         self.model = self.model.to(self.device)
 
-    def __init__(self, model, criterion, optimizer, metrics=None, device=:"cpu",  wandb=False):
+    def __init__(self, model, criterion, optimizer, metrics=None, device="cpu",  wandb=False):
         """
         Write documentation. 
 
@@ -77,7 +78,7 @@ class Trainer:
 
         return res 
     
-    def fit(self, train_loader, val_loader=None, epochs=50, verbose=True):
+    def fit(self, train_loader, val_loader=None, nepochs=50, verbose=True):
         """
         Accept data loaders for training and validation and train the model. 
         """
@@ -116,7 +117,7 @@ class Trainer:
             if verbose:
                 out_str = f" --- [Epoch {epoch:3d}/{nepochs}] --- \n"
                 for k, v in history.items():
-                    out_str += f"{k} : {v[-1]}:.4f, "
+                    out_str += f"{k} : {v[-1]:.4f}, "
                 out_str = out_str[:-2]
                 print(out_str)
         

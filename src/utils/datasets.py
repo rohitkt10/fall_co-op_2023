@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from torch.utils.data import Dataset
 import torch.nn as nn
 
@@ -16,7 +17,7 @@ class DNASequenceDataset(Dataset):
         sequence = self.sequences[idx]
         label = self.labels[idx]
         one_hot_sequence = self.sequence_string_to_one_hot(sequence, self.alphabet)
-        return one_hot_sequence, label
+        return torch.tensor(one_hot_sequence, dtype=torch.float32), torch.tensor(label, dtype=torch.float32)
 
     def sequence_string_to_one_hot(self, seq, alphabet):
         conversion_dict = {c: i for (i, c) in enumerate(list(alphabet))}
