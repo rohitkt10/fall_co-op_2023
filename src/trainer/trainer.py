@@ -115,9 +115,10 @@ class Trainer:
             
             # print to std. output 
             if verbose:
-                out_str = f" --- [Epoch {epoch:3d}/{nepochs}] --- \n"
+                out_str = f"Epoch: {epoch:3d}/{nepochs}, "
                 for k, v in history.items():
-                    out_str += f"{k} : {v[-1]:.4f}, "
+                    out_str += f"{k}: {v[-1]:.4f}, "
+                    self.wandb.log({f"{k}": v[-1]})
                 out_str = out_str[:-2]
                 print(out_str)
         
