@@ -78,11 +78,13 @@ class Trainer:
 
         return res 
     
-    def fit(self, train_loader, val_loader=None, nepochs=50, verbose=True):
+    def fit(self, train_loader, val_loader=None, nepochs=30, patience=5, save_path=None, verbose=True):
         """
         Accept data loaders for training and validation and train the model. 
         """
         history = {}
+        best_val_loss = float('inf')
+        epochs_without_improvement = 0
 
         for epoch in range(1, 1+nepochs):
             train_res = {}
@@ -112,6 +114,23 @@ class Trainer:
                     if k not in history:
                         history[k] = []
                     history[k].append(np.mean(v))
+
+            # check for early stopping
+            if val_loader:
+                val_loss = history['val_loss'][-1]
+                if val_loss < best_val_loss:
+                    # Save the model if val loss decreases
+                    if save_path is not None:
+                        torch.save(self.model.state_dict(), save_path)
+                        print(f"Model saved at epoch {epoch}, val_loss: {best_val_loss:.4f} -> {val_loss:.4f}")
+                    best_val_loss = val_loss
+                    epochs_without_improvement = 0
+                else:
+                    epochs_without_improvement += 1
+                    if epochs_without_improvement >= patience:
+                        print(f"Early stopping: No improvement in validation loss for {patience} epochs.")
+                        break
+
             
             # print to std. output 
             if verbose:
