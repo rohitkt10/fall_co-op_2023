@@ -24,11 +24,13 @@ class Explainer:
         scores <torch.tensor> - The saliency scores for each feature in each sample; same shape as input. 
         """
 
-        x.requires_grad = True 
-        y = self.model(x)  # shape (batch size, num classes)
-        y = y[:, self.class_idx]  # shape (batch size,)
-        grad = torch.autograd.grad(y, x, grad_outputs=torch.ones_like(x))[0] # shape same as x 
-        scores = x*grad 
+        x.requires_grad = True
+        y = self.model(x)  # shape (batch_size, num_classes)
+        y = y[:, self.class_idx]  # shape (batch_size,)
+        # Create a tensor with ones to match the shape of y for grad_outputs
+        grad_outputs = torch.ones_like(y)
+        grad = torch.autograd.grad(y, x, grad_outputs=grad_outputs)[0]  # shape same as x
+        scores = x * grad
         return scores
     
     def smoothgrad(self, x, num_samples=50):
