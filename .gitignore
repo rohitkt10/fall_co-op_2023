@@ -11,6 +11,7 @@
 *.png
 *.npz
 __pycache__/
+.DS_STORE
 
 ### JupyterNotebooks ###
 
@@ -25,3 +26,7 @@ ipython_config.py
 #   git rm -r .ipynb_checkpoints/
 
 wandb/
+
+# pytorch models
+*.pt
+*.pth

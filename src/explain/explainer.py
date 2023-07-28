@@ -26,7 +26,7 @@ class Explainer:
 
         x.requires_grad = True 
         y = self.model(x)  # shape (batch size, num classes)
-        y = y[:, class_idx]  # shape (batch size,)
+        y = y[:, self.class_idx]  # shape (batch size,)
         grad = torch.autograd.grad(y, x, grad_outputs=torch.ones_like(x))[0] # shape same as x 
         scores = x*grad 
         return scores
