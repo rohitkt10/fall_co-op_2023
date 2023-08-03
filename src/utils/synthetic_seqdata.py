@@ -22,6 +22,9 @@ def download_data(savedir="./"):
         'https://www.dropbox.com/s/8td0n60zb6bdi12/train_labels.txt',
         'https://www.dropbox.com/s/8drv3039bg837kx/valid_labels.txt',
         'https://www.dropbox.com/s/f31qxggnfqjddb9/test_labels.txt',
+        'https://www.dropbox.com/scl/fi/t94d2597om3tcbt729yql/gt_train.npy?rlkey=gnyrta7kea1pjgat2ch2em3w8&dl=0',
+        'https://www.dropbox.com/scl/fi/k8tgrl2avk48lt9ic4fao/gt_valid.npy?rlkey=zkfgg7mvrz5kl9xzk5a2oulkv&dl=0',
+        'https://www.dropbox.com/scl/fi/buxem3dgfai0l2leclhp6/gt_test.npy?rlkey=40kn10h03u2mgrmgzgrjs9g86&dl=0',
                 ]
     for url in download_links:
         cmd = ["wget", "-P", f"{savedir}", f"{url}"]
