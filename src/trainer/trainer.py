@@ -14,7 +14,7 @@ class Trainer:
         self._device = d
         self.model = self.model.to(self.device)
 
-    def __init__(self, model, criterion, optimizer, metrics=None, device="cpu",  wandb=False):
+    def __init__(self, model, criterion, optimizer, lr_scheduler=None, metrics=None, device="cpu",  wandb=False):
         """
         Write documentation. 
 
@@ -27,6 +27,7 @@ class Trainer:
         self._device = device
         self.criterion = criterion
         self.optimizer = optimizer
+        self.lr_scheduler = lr_scheduler
         self.wandb = wandb
         self.model = self.model.to(self.device)
         self.metrics = metrics
@@ -41,6 +42,7 @@ class Trainer:
         self.model.train()
         inputs, labels = batch 
         inputs, labels = inputs.to(self.device), labels.to(self.device)
+        self.optimizer.zero_grad()
         outputs = self.model(inputs)
         loss = self.criterion(outputs.squeeze(), labels)
         loss.backward()
@@ -68,6 +70,9 @@ class Trainer:
         outputs = self.model(inputs)
         loss = self.criterion(outputs.squeeze(), labels)
         loss = loss.detach().numpy().item()
+        # update the learning rate scheduler with the validation loss
+        if self.lr_scheduler is not None:
+            self.lr_scheduler.step(loss)
         res = {'val_loss':loss}
 
         if self.metrics:
