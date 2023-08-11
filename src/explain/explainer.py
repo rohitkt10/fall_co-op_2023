@@ -33,7 +33,7 @@ class Explainer:
         scores = x * grad
         return scores
     
-    def smoothgrad(self, x, num_samples=50):
+    def smoothgrad(self, x, num_samples=50, noise_level=0.1):
         """
         Arguments
         ---------
@@ -44,40 +44,16 @@ class Explainer:
         -------
         scores <torch.tensor> - The saliency scores for each feature in each sample; same shape as input. 
         """
-        if num_samples == 1:
-            return self.saliency_map(x)
-
-        # Initialize an array to store the perturbed samples
-        perturbed_samples = torch.zeros((num_samples,) + x.shape).to(self.device)
-        
-        # Create num_samples perturbations with Gaussian noise
-        for i in range(num_samples):
-            noise = torch.randn_like(x).to(self.device)  # Gaussian noise with the same shape as x
-            perturbed_samples[i] = x + noise
-        
-        # Calculate the saliency maps for the perturbed samples
-        perturbed_saliency_maps = self.saliency_map(perturbed_samples)
-        
-        # Average the saliency maps over the num_samples
-        scores = torch.mean(perturbed_saliency_maps, dim=0)
-        return scores
-        
-        # # Step 1: Create a tensor with random noise (mean=0, std=1) of the same shape as the input
-        # noise = torch.randn_like(x)
-
-        # # Step 2: Expand the dimensions of the noise tensor to match the batch size of perturbed inputs
-        # noise = noise.unsqueeze(1).repeat(1, num_samples, 1)  # Replace ... with the actual size along the sample dimension
-        # # Step 3: Add the noise to the input tensor to generate a batch of perturbed inputs
-        # perturbed_inputs = x + noise.expand(-1, num_samples, -1, ...)
-
-        # # Step 4: Pass the batch of perturbed inputs through the model
-        # # and collect the output predictions for each sample in the batch
-        # model_outputs = self.model(perturbed_inputs)
-
-        # # Step 5: Compute the mean of the saliency scores across the perturbed samples for each input feature
-        # saliency_scores = torch.mean(self.saliency_map(perturbed_inputs), dim=0)
-
-        # return saliency_scores
+        scores_list = []
+        for _ in range(num_samples):
+            # Generate noise and add it to the input
+            noisy_x = x + torch.randn_like(x) * noise_level
+            # Calculate saliency map for the noisy input
+            saliency = self.saliency_map(noisy_x)
+            scores_list.append(saliency)
+        # Average the saliency maps
+        averaged_scores = torch.stack(scores_list).mean(dim=0)
+        return averaged_scores
 
     def integrated_gradients(self, x):
         """
