@@ -55,7 +55,7 @@ class Explainer:
         averaged_scores = torch.stack(scores_list).mean(dim=0)
         return averaged_scores
 
-    def integrated_gradients(self, x):
+    def integrated_gradients(self, x, baseline=None, num_steps=50):
         """
         Arguments
         ---------
@@ -67,24 +67,22 @@ class Explainer:
         -------
         scores <torch.tensor> - The integrated gradients for each feature in the input x.
         """
-        baseline = None
-        num_steps = 50
+
         if baseline is None:
-            baseline = torch.zeros_like(x).to(self.device)
-        else:
-            baseline = baseline.to(self.device)
+            baseline = torch.zeros_like(x)
 
-        # Calculate the step size for the integration path
-        alpha = torch.linspace(0, 1, num_steps).view(-1, 1, 1, 1).to(self.device)
+        # Compute the path from baseline to input
+        path = torch.linspace(0.0, 1.0, num_steps).to(x.device)
+        path = baseline + path[:, None, None, None] * (x - baseline)
 
-        # Create the integrated inputs along the path
-        interpolated_inputs = baseline + alpha * (x - baseline)
+        # Initialize integrated gradients
+        integrated_grads = torch.zeros_like(x)
 
-        # Calculate the saliency maps for each interpolated input
-        saliency_maps = self.saliency_map(interpolated_inputs)
+        for t in path:
+            # Compute gradients at each step of the path
+            step_grads = self.saliency_map(t)  # No need to add batch dimension
+            integrated_grads += step_grads / num_steps
 
-        # Integrate the saliency maps along the path (using the trapezoidal rule)
-        integrated_gradients = torch.mean(saliency_maps, dim=0) * (x - baseline)
-
-        return integrated_gradients
-
+        # Calculate the final integrated gradients
+        scores = (x - baseline) * integrated_grads
+        return scores
