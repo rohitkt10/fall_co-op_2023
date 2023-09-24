@@ -30,3 +30,6 @@ wandb/
 # pytorch models
 *.pt
 *.pth
+
+# log files
+*.log
