@@ -1,6 +1,7 @@
 import networkx as nx
 import random
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import numpy as np
 import logging
 
@@ -58,6 +59,9 @@ def create_er_replace_with_ba_adjacency(n, p, m,
     num_motifs = random.randint(min_num_motifs, max_num_motifs)
 
     node_colors = ['lightgreen'] * n
+    edge_colors = {}  # Initialize edge colors as a dictionary
+    # Randomly select 'n' colors from the named_colors list 
+    edge_colors_list = random.sample(list(mcolors.CSS4_COLORS.keys()), num_motifs)
 
     for motif_i in range(num_motifs):
         # Generate a random motif size within the specified range
@@ -85,6 +89,12 @@ def create_er_replace_with_ba_adjacency(n, p, m,
             if np.sum(ba_motif.sum(axis=1) == 0) > 0:
                 logging.warning("BA graph contains nodes with degree 0.")
 
+            if plot:
+                # Set edge colors within the subgraph to distinguish from others
+                for i, idx in enumerate(er_nodes_to_replace):
+                    for j, jdx in enumerate(er_nodes_to_replace):
+                        if i != j:
+                            edge_colors[(idx, jdx)] = edge_colors_list[motif_i]
         else:
             logging.warning("BA model requires ba_n >= m")
             return None
@@ -96,7 +106,10 @@ def create_er_replace_with_ba_adjacency(n, p, m,
     # Plot ER graph with BA subgraph
     if plot:
         plt.subplot(122)
-        nx.draw_networkx(nx.Graph(er_adjacency), with_labels=True, node_color=node_colors, node_size=300)
+        G = nx.Graph(er_adjacency)
+        pos = nx.spring_layout(G)  # Position nodes using a layout algorithm
+        edge_color_l = [edge_colors.get((u, v), 'gray') for u, v in G.edges()]
+        nx.draw_networkx(G, pos, with_labels=True, node_color=node_colors, node_size=300, edge_color=edge_color_l)
         plt.title('ER graph with BA subgraphs')
 
     return er_adjacency
