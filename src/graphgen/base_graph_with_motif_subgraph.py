@@ -16,25 +16,27 @@ def create_graph_with_motif_adjacency(base_graph_model='ER',
                                       plot=False,
                                       log=True):
     """
-    Create a large sparse graph using the Erdős-Rényi (ER) model and replace
-    a specified number of nodes with Barabási-Albert (BA) model motifs.
+    Create a large sparse graph using a specified base graph model and insert motifs by replacing
+    a specified number of nodes with a specified graph model.
 
     Parameters:
-    - base_graph_model (str): The base graph model to use ('ER' for Erdős-Rényi or 'BA' for Barabási-Albert).
+    - base_graph_model (str): The base graph model to use 
+                              ('ER' for Erdős-Rényi or 'BA' for Barabási-Albert or 'WS' for Watts-Strogatz).
     - motif_graph_model (str): The motif graph model to use.
-    - n (int): Number of nodes in the Erdős-Rényi (ER) graph.
-    - p (float): Probability of an edge between nodes in the ER graph (0 <= p <= 1), or probability of rewiring each edge in the WS graph.
+    - n (int): Number of nodes in the `base_graph_model` graph.
+    - p (float): Probability of an edge between nodes in the ER graph (0 <= p <= 1), 
+                 or probability of rewiring each edge in the WS graph.
     - m (int): Number of edges to attach from a new node to existing nodes in the BA model (m >= 1).
     - k (int): Each node is joined with its `k` nearest neighbors in a ring topology in the WS model.
-    - min_motif_size (int): Minimum number of nodes in a BA model motif.
-    - max_motif_size (int): Maximum number of nodes in a BA model motif.
+    - min_motif_size (int): Minimum number of nodes in `motif_graph_model`.
+    - max_motif_size (int): Maximum number of nodes in the `motif_graph_model`.
     - min_num_motifs (int): Minimum number of motifs to embed.
     - max_num_motifs (int): Maximum number of motifs to embed.
     - motif_overlap (bool): Whether motifs can overlap in nodes (default is False).
-    - min_base_edge_weight (float): Minimum edge weight for edges in the base graph (ER graph)
-    - max_base_edge_weight (float): Maximum edge weight for edges in the base graph (ER graph)
-    - min_motif_edge_weight (float): Minimum edge weight for edges in the motif graph (BA model)
-    - max_motif_edge_weight (float): Maximum edge weight for edges in the motif graph (BA model)
+    - min_base_edge_weight (float): Minimum edge weight for edges in the base graph.
+    - max_base_edge_weight (float): Maximum edge weight for edges in the base graph.
+    - min_motif_edge_weight (float): Minimum edge weight for edges in the motif graph.
+    - max_motif_edge_weight (float): Maximum edge weight for edges in the motif graph.
     - plot (bool): Whether to plot the graphs (default is False).
     - log (bool): Whether to log variable values for debugging (default is True).
 
@@ -125,7 +127,7 @@ def create_graph_with_motif_adjacency(base_graph_model='ER',
             elif motif_graph_model == 'BA':
                 motif_adjacency = nx.to_numpy_array(nx.barabasi_albert_graph(motif_size, m))
             elif motif_graph_model == 'WS':
-                motif_adjacency = nx.watts_strogatz_graph(n, k, p)
+                motif_adjacency = nx.to_numpy_array(nx.watts_strogatz_graph(n, k, p))
 
             # replace edge weights
             if min_motif_edge_weight != max_motif_edge_weight:
@@ -145,7 +147,7 @@ def create_graph_with_motif_adjacency(base_graph_model='ER',
                 motif_adjacency[J, I] = edge_weights
 
             if np.sum(motif_adjacency.sum(axis=1) == 0) > 0:
-                logging.info("BA graph contains nodes with degree 0.")
+                logging.info(f"{motif_graph_model} graph contains nodes with degree 0.")
 
             if plot:
                 # Set edge colors within the subgraph to distinguish from others
@@ -154,7 +156,7 @@ def create_graph_with_motif_adjacency(base_graph_model='ER',
                         if i != j:
                             edge_colors[(idx, jdx)] = edge_colors_list[motif_i]
         else:
-            logging.warning("BA model requires motif_size >= m")
+            logging.warning(f"{motif_graph_model} model requires motif_size >= m")
             return None
 
         # Replace selected nodes in ER adjacency matrix with BA model motif
@@ -163,13 +165,14 @@ def create_graph_with_motif_adjacency(base_graph_model='ER',
 
     # Ensure that none of the nodes have degree 0 in the original ER graph
     if np.sum(base_adjacency.sum(axis=1) == 0) > 0:
-        logging.warning(f"ER with BA subgraph contains nodes with degree 0: {np.sum(base_adjacency.sum(axis=1) == 0)}")
+        logging.warning(f"{base_graph_model} with {motif_graph_model} subgraph contains nodes with degree 0:"
+                         "{np.sum(base_adjacency.sum(axis=1) == 0)}")
 
     # Connect zero-degree nodes to random other nodes
     final_graph = nx.Graph(base_adjacency)
     degree_dict = dict(final_graph.degree())
     zero_degree_nodes = [k for k in degree_dict if degree_dict[k] == 0]
-    logging.info(f'Nodes with zero degree in ER with BA subgraph: {zero_degree_nodes}')
+    logging.info(f'Nodes with zero degree in {base_graph_model} with {motif_graph_model} subgraph: {zero_degree_nodes}')
     nonzero_degrees = np.sort([v for k, v in degree_dict.items() if k not in zero_degree_nodes] )
     nonzero_degree_nodes = [k for k, v in degree_dict.items() if v != 0]
     degrees, counts = np.unique(nonzero_degrees, return_counts=True) 
@@ -219,8 +222,7 @@ def create_graph_with_motif_adjacency(base_graph_model='ER',
             plt.axvline(x=clustering_coefficient, linestyle='--', color=c, 
                         label=f'avg clustering coeff ({clustering_coefficient:.2f})')
             plt.xlabel('Clustering Coefficient')
-            plt.ylabel('Value')
-
+            plt.ylabel('Frequency')
         plt.title('Clustering Coefficient')
         plt.legend()
 
