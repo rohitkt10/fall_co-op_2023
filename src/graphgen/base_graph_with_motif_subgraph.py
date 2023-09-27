@@ -5,16 +5,16 @@ import matplotlib.colors as mcolors
 import numpy as np
 import logging
 
-def create_er_replace_with_ba_adjacency(base_graph_model='ER',
-                                        motif_graph_model='BA',
-                                        n=300, p=0.2, m=3,
-                                        min_motif_size=10, max_motif_size=30,
-                                        min_num_motifs=3, max_num_motifs=5,
-                                        motif_overlap=False,
-                                        min_base_edge_weight=1.0, max_base_edge_weight=1.0,
-                                        min_motif_edge_weight=1.0, max_motif_edge_weight=1.0,
-                                        plot=False,
-                                        log=True):
+def create_graph_with_motif_adjacency(base_graph_model='ER',
+                                      motif_graph_model='BA',
+                                      n=300, p=0.2, m=3,
+                                      min_motif_size=10, max_motif_size=30,
+                                      min_num_motifs=3, max_num_motifs=5,
+                                      motif_overlap=False,
+                                      min_base_edge_weight=1.0, max_base_edge_weight=1.0,
+                                      min_motif_edge_weight=1.0, max_motif_edge_weight=1.0,
+                                      plot=False,
+                                      log=True):
     """
     Create a large sparse graph using the Erdős-Rényi (ER) model and replace
     a specified number of nodes with Barabási-Albert (BA) model motifs.
