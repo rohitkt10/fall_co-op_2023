@@ -7,7 +7,7 @@ import logging
 
 def create_graph_with_motif_adjacency(base_graph_model='ER',
                                       motif_graph_model='BA',
-                                      n=300, p=0.2, m=3,
+                                      n=300, p=0.2, m=3, k=4,
                                       min_motif_size=10, max_motif_size=30,
                                       min_num_motifs=3, max_num_motifs=5,
                                       motif_overlap=False,
@@ -23,8 +23,9 @@ def create_graph_with_motif_adjacency(base_graph_model='ER',
     - base_graph_model (str): The base graph model to use ('ER' for Erdős-Rényi or 'BA' for Barabási-Albert).
     - motif_graph_model (str): The motif graph model to use.
     - n (int): Number of nodes in the Erdős-Rényi (ER) graph.
-    - p (float): Probability of an edge between nodes in the ER graph (0 <= p <= 1).
+    - p (float): Probability of an edge between nodes in the ER graph (0 <= p <= 1), or probability of rewiring each edge in the WS graph.
     - m (int): Number of edges to attach from a new node to existing nodes in the BA model (m >= 1).
+    - k (int): Each node is joined with its `k` nearest neighbors in a ring topology in the WS model.
     - min_motif_size (int): Minimum number of nodes in a BA model motif.
     - max_motif_size (int): Maximum number of nodes in a BA model motif.
     - min_num_motifs (int): Minimum number of motifs to embed.
@@ -53,6 +54,8 @@ def create_graph_with_motif_adjacency(base_graph_model='ER',
         base_graph = nx.erdos_renyi_graph(n, p)
     elif base_graph_model == 'BA':
         base_graph = nx.barabasi_albert_graph(n, m)
+    elif base_graph_model == 'WS':
+        base_graph = nx.watts_strogatz_graph(n, k, p)
     base_adjacency = nx.to_numpy_array(base_graph)
     # replace edge weights
     if min_base_edge_weight != max_base_edge_weight:
@@ -121,6 +124,8 @@ def create_graph_with_motif_adjacency(base_graph_model='ER',
                 motif_adjacency = nx.to_numpy_array(nx.erdos_renyi_graph(motif_size, p))
             elif motif_graph_model == 'BA':
                 motif_adjacency = nx.to_numpy_array(nx.barabasi_albert_graph(motif_size, m))
+            elif motif_graph_model == 'WS':
+                motif_adjacency = nx.watts_strogatz_graph(n, k, p)
 
             # replace edge weights
             if min_motif_edge_weight != max_motif_edge_weight:
