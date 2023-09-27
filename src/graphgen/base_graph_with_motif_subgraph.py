@@ -6,7 +6,9 @@ import numpy as np
 import logging
 
 class GraphWithMotifs:
-    
+    """
+    Create graph embeded with motifs.
+    """ 
     def __init__(self,
                  base_graph_model='ER',
                  motif_graph_model='BA',
@@ -105,10 +107,9 @@ class GraphWithMotifs:
 
         # plot original ER graph
         if self.plot:
-            plt.figure(figsize=(14, 8))
-            plt.subplot(221)
-            nx.draw_networkx(nx.Graph(base_adjacency), with_labels=True, node_color='skyblue', node_size=300)
-            plt.title(f'Original {self.base_graph_model} graph')
+            fig, ax = plt.subplots(2, 2, figsize=(14, 8))
+            nx.draw_networkx(nx.Graph(base_adjacency), with_labels=True, node_color='skyblue', node_size=300, ax=ax[0, 0])
+            ax[0, 0].set_title(f'Original {self.base_graph_model} graph')
 
         # Randomly determine the number of motifs to embed
         num_motifs = random.randint(self.min_num_motifs, self.max_num_motifs)
@@ -215,38 +216,36 @@ class GraphWithMotifs:
 
         # Plot final graph with subgraphs
         if self.plot:
-            plt.subplot(222)
             pos = nx.spring_layout(final_graph)  # Position nodes using a layout algorithm
             edge_color_l = [edge_colors.get((u, v), 'gray') for u, v in final_graph.edges()]
-            nx.draw_networkx(final_graph, pos, with_labels=True, node_color=node_colors, node_size=300, edge_color=edge_color_l)
-            plt.title(f'{self.base_graph_model} graph with {num_motifs} {self.motif_graph_model} subgraphs')
+            nx.draw_networkx(final_graph, pos, with_labels=True, node_color=node_colors, node_size=300, edge_color=edge_color_l, ax=ax[0, 1])
+            ax[0, 1].set_title(f'{self.base_graph_model} graph with {num_motifs} {self.motif_graph_model} subgraphs')
 
             # Plot degree distribution
             plt.subplot(223)
             for g, l, c in zip([base_graph, final_graph],
                                [f'{self.base_graph_model}', f'{self.base_graph_model} with {self.motif_graph_model} subgraphs'],
                                ['skyblue', 'lightcoral']):
-                plt.plot(np.sort([j for _, j in g.degree()])[::-1], marker='.', alpha=0.7, label=l, color=c)
-            plt.xlabel('Degree')
-            plt.ylabel('Frequency')
-            plt.title('Degree Distribution')
-            plt.legend()
+                ax[1, 0].plot(np.sort([j for _, j in g.degree()])[::-1], marker='.', alpha=0.7, label=l, color=c)
+                ax[1, 0].set_xlabel('Degree')
+                ax[1, 0].set_ylabel('Frequency')
+                ax[1, 0].set_title('Degree Distribution')
+                ax[1, 0].legend()
 
             # plot Clustering coefficient plot
-            plt.subplot(224)
             for g, l, c in zip([base_graph, final_graph],
                                [f'{self.base_graph_model}', f'{self.base_graph_model} with {self.motif_graph_model} subgraphs'],
                                ['skyblue', 'lightcoral']):
                 clustering_coefficient = nx.average_clustering(g)
                 # Create a histogram of clustering coefficients
                 clustering_values = list(nx.clustering(g).values())
-                plt.hist(clustering_values, bins=20, alpha=0.5, color=c, label=l)
+                ax[1, 1].hist(clustering_values, bins=20, alpha=0.5, color=c, label=l)
                 # Add a vertical line for the average clustering coefficient
-                plt.axvline(x=clustering_coefficient, linestyle='--', color=c, 
+                ax[1, 1].axvline(x=clustering_coefficient, linestyle='--', color=c, 
                             label=f'avg clustering coeff ({clustering_coefficient:.2f})')
-                plt.xlabel('Clustering Coefficient')
-                plt.ylabel('Frequency')
-            plt.title('Clustering Coefficient')
-            plt.legend()
+                ax[1, 1].set_xlabel('Clustering Coefficient')
+                ax[1, 1].set_ylabel('Frequency')
+                ax[1, 1].set_title('Clustering Coefficient')
+                ax[1, 1].legend()
 
         return base_adjacency
