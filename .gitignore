@@ -33,3 +33,4 @@ wandb/
 
 # log files
 *.log
+*.json
