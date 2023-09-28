@@ -7,7 +7,7 @@ import logging
 
 class GraphWithMotifs:
     """
-    Create graph embeded with motifs.
+    Create graph embedded with motifs.
     """ 
     def __init__(self,
                  base_graph_model='ER',
@@ -79,29 +79,11 @@ class GraphWithMotifs:
             logging.info(f"plot = {self.plot}")
 
         # Create the ER graph adjacency matrix
-        if self.base_graph_model == 'ER':
-            self.base_graph = nx.erdos_renyi_graph(self.n, self.p)
-        elif self.base_graph_model == 'BA':
-            self.base_graph = nx.barabasi_albert_graph(self.n, self.m)
-        elif self.base_graph_model == 'WS':
-            self.base_graph = nx.watts_strogatz_graph(self.n, self.k, self.p)
+        self.base_graph = self.create_graph_model(self.base_graph_model, self.n)
         base_adjacency = nx.to_numpy_array(self.base_graph)
+
         # replace edge weights
-        if self.min_base_edge_weight != self.max_base_edge_weight:
-            assert self.min_base_edge_weight < self.max_base_edge_weight
-            num_edges = int(base_adjacency.sum()/2)
-            # sample `num_edges`
-            edge_weights = np.random.uniform(self.min_base_edge_weight, self.max_base_edge_weight, num_edges)
-            #[1.0, 2.0, 3.0, 1.0, 2.0, ...]
-            I, J = np.where(base_adjacency) 
-            # get upper triangular matrix
-            idx = np.where(J > I)[0]
-            I = I[idx] 
-            J = J[idx]
-            num_edges = len(I) 
-            edge_weights = np.random.uniform(0., 1., (num_edges,))
-            base_adjacency[I, J] = edge_weights
-            base_adjacency[J, I] = edge_weights
+        base_adjacency = self.replace_edge_weights(base_adjacency, self.min_base_edge_weight, self.max_base_edge_weight)
         # update base_graph
         self.base_graph = nx.Graph(base_adjacency)
             
@@ -144,29 +126,10 @@ class GraphWithMotifs:
 
             # Create the motif model adjacency matrix
             if motif_size >= self.m:
-                if self.motif_graph_model == 'ER':
-                    motif_adjacency = nx.to_numpy_array(nx.erdos_renyi_graph(motif_size, self.p))
-                elif self.motif_graph_model == 'BA':
-                    motif_adjacency = nx.to_numpy_array(nx.barabasi_albert_graph(motif_size, self.m))
-                elif self.motif_graph_model == 'WS':
-                    motif_adjacency = nx.to_numpy_array(nx.watts_strogatz_graph(self.n, self.k, self.p))
+                motif_adjacency = nx.to_numpy_array(self.create_graph_model(self.motif_graph_model, motif_size))
 
                 # replace edge weights
-                if self.min_motif_edge_weight != self.max_motif_edge_weight:
-                    assert self.min_motif_edge_weight < self.max_motif_edge_weight
-                    num_edges = int(motif_adjacency.sum()/2)
-                    # sample `num_edges`
-                    edge_weights = np.random.uniform(self.min_motif_edge_weight, self.max_motif_edge_weight, num_edges)
-                    #[1.0, 2.0, 3.0, 1.0, 2.0, ...]
-                    I, J = np.where(motif_adjacency) 
-                    # get upper triangular matrix
-                    idx = np.where(J > I)[0]
-                    I = I[idx] 
-                    J = J[idx]
-                    num_edges = len(I) 
-                    edge_weights = np.random.uniform(0., 1., (num_edges,))
-                    motif_adjacency[I, J] = edge_weights
-                    motif_adjacency[J, I] = edge_weights
+                motif_adjacency = self.replace_edge_weights(motif_adjacency, self.min_motif_edge_weight, self.max_motif_edge_weight)
 
                 if np.sum(motif_adjacency.sum(axis=1) == 0) > 0:
                     logging.info(f"{self.motif_graph_model} graph contains nodes with degree 0.")
@@ -192,6 +155,66 @@ class GraphWithMotifs:
 
         # Connect zero-degree nodes to random other nodes
         self.final_graph = nx.Graph(base_adjacency)
+        self.connect_nodes_with_zero_degree()
+
+        degree_dict = dict(self.final_graph.degree())
+        zero_degree_nodes = [k for k in degree_dict if degree_dict[k] == 0]
+        if len(zero_degree_nodes) == 0:
+            logging.info("Nodes with degree 0 connected!")
+
+        # Plot graphs
+        if self.plot:
+            _, ax = plt.subplots(3, 2, figsize=(14, 10))
+            self.plot_base_graph(ax[0, 0])
+            self.plot_final_graph_with_motifs(edge_colors, node_colors, num_motifs, ax[0, 1])
+            self.plot_degree_distribution(ax[1, 0])
+            self.plot_clustering_coefficient_distribution(ax[1, 1])
+            self.plot_betweenness_centrality_distribution(ax[2, 0])
+
+        # return updated adjacency matrix
+        base_adjacency = nx.to_numpy_array(self.final_graph)
+        return base_adjacency
+
+
+    def create_graph_model(self, graph_model, n):
+        """
+        Create a graph using the specified model.
+        """
+        if graph_model == 'ER':
+            return nx.erdos_renyi_graph(n, self.p)
+        elif graph_model == 'BA':
+            return nx.barabasi_albert_graph(n, self.m)
+        elif graph_model == 'WS':
+            return nx.watts_strogatz_graph(self.n, self.k, self.p)
+        else:
+            logging.warning(f"Invalid graph model: {graph_model}")
+            return None
+    
+    def replace_edge_weights(self, adjacency_matrix, min_edge_weight, max_edge_weight):
+        """
+        Replace edge weights in the graph adjacency matrix with random values between the specified range.
+        """
+        if min_edge_weight != max_edge_weight:
+            assert min_edge_weight < max_edge_weight
+            num_edges = int(adjacency_matrix.sum()/2)
+            # sample `num_edges`
+            #[1.0, 2.0, 3.0, 1.0, 2.0, ...]
+            I, J = np.where(adjacency_matrix) 
+            # get upper triangular matrix
+            idx = np.where(J > I)[0]
+            I = I[idx] 
+            J = J[idx]
+            num_edges = len(I) 
+            edge_weights = np.random.uniform(min_edge_weight, max_edge_weight, num_edges)
+            adjacency_matrix[I, J] = edge_weights
+            adjacency_matrix[J, I] = edge_weights
+
+        return adjacency_matrix
+
+    def connect_nodes_with_zero_degree(self):
+        """
+        Connect nodes with zero degree to random other nodes
+        """
         degree_dict = dict(self.final_graph.degree())
         zero_degree_nodes = [k for k in degree_dict if degree_dict[k] == 0]
         logging.info(f'Nodes with zero degree in {self.base_graph_model} with {self.motif_graph_model} subgraph: {zero_degree_nodes}')
@@ -204,26 +227,6 @@ class GraphWithMotifs:
             sample_connections = np.random.choice(nonzero_degree_nodes, size=(sample_degree,), replace=False)
             for node2 in sample_connections: 
                 self.final_graph.add_edge(node1, node2)
-
-        degree_dict = dict(self.final_graph.degree())
-        zero_degree_nodes = [k for k in degree_dict if degree_dict[k] == 0]
-        if len(zero_degree_nodes) == 0:
-            logging.info("Nodes with degree 0 connected!")
-        # update adjacency matrix
-        base_adjacency = nx.to_numpy_array(self.final_graph)
-
-        # Plot graphs
-        if self.plot:
-            _, ax = plt.subplots(3, 2, figsize=(14, 10))
-            self.plot_base_graph(ax[0, 0])
-            self.plot_final_graph_with_motifs(edge_colors, node_colors, num_motifs, ax[0, 1])
-            self.plot_degree_distribution(ax[1, 0])
-            self.plot_clustering_coefficient_distribution(ax[1, 1])
-            self.plot_betweenness_centrality_distribution(ax[2, 0])
-
-        # return base graph adjacency matrix
-        return base_adjacency
-
 
     def plot_base_graph(self, ax):
         """
