@@ -5,6 +5,7 @@ import matplotlib.colors as mcolors
 import numpy as np
 import logging
 
+
 class GraphWithMotifs:
     """
     Create graph embedded with motifs.
@@ -170,6 +171,7 @@ class GraphWithMotifs:
             self.plot_degree_distribution(ax[1, 0])
             self.plot_clustering_coefficient_distribution(ax[1, 1])
             self.plot_betweenness_centrality_distribution(ax[2, 0])
+            self.plot_path_length_distribution(ax[2, 1])
 
         # return updated adjacency matrix
         base_adjacency = nx.to_numpy_array(self.final_graph)
@@ -295,3 +297,18 @@ class GraphWithMotifs:
             ax.set_ylabel('Frequency')
             ax.set_title('Betweenness Centrality Distribution')
             ax.legend()
+
+    def plot_path_length_distribution(self, ax):
+        """
+        Plot the distribution of shortest path lengths between nodes in the graph.
+        """
+        path_lengths = []
+        for node1 in self.final_graph.nodes():
+            for node2 in self.final_graph.nodes():
+                if node1 != node2:
+                    path_lengths.append(nx.shortest_path_length(self.final_graph, node1, node2))
+        path_length_counts = dict(zip(*np.unique(path_lengths, return_counts=True)))
+        ax.bar(path_length_counts.keys(), path_length_counts.values())
+        ax.set_xlabel('Shortest Path Length')
+        ax.set_ylabel('Frequency')
+        ax.set_title('Path Length Distribution')
