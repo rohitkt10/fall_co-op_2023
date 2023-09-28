@@ -58,6 +58,8 @@ class GraphWithMotifs:
         self.max_motif_edge_weight = max_motif_edge_weight
         self.plot = plot
         self.log = log
+        self.base_graph = None  # base graph created as per the specified model
+        self.final_graph = None # final graph with motifs embedded
 
 
     def create_graph_with_motif_adjacency(self):
@@ -78,12 +80,12 @@ class GraphWithMotifs:
 
         # Create the ER graph adjacency matrix
         if self.base_graph_model == 'ER':
-            base_graph = nx.erdos_renyi_graph(self.n, self.p)
+            self.base_graph = nx.erdos_renyi_graph(self.n, self.p)
         elif self.base_graph_model == 'BA':
-            base_graph = nx.barabasi_albert_graph(self.n, self.m)
+            self.base_graph = nx.barabasi_albert_graph(self.n, self.m)
         elif self.base_graph_model == 'WS':
-            base_graph = nx.watts_strogatz_graph(self.n, self.k, self.p)
-        base_adjacency = nx.to_numpy_array(base_graph)
+            self.base_graph = nx.watts_strogatz_graph(self.n, self.k, self.p)
+        base_adjacency = nx.to_numpy_array(self.base_graph)
         # replace edge weights
         if self.min_base_edge_weight != self.max_base_edge_weight:
             assert self.min_base_edge_weight < self.max_base_edge_weight
@@ -100,16 +102,12 @@ class GraphWithMotifs:
             edge_weights = np.random.uniform(0., 1., (num_edges,))
             base_adjacency[I, J] = edge_weights
             base_adjacency[J, I] = edge_weights
+        # update base_graph
+        self.base_graph = nx.Graph(base_adjacency)
             
         # check degree 0 nodes in the original ER graph
         if np.sum(base_adjacency.sum(axis=1) == 0) > 0:
             logging.info(f"Original {self.base_graph_model} graph contains nodes with degree 0.")
-
-        # plot original ER graph
-        if self.plot:
-            fig, ax = plt.subplots(2, 2, figsize=(14, 8))
-            nx.draw_networkx(nx.Graph(base_adjacency), with_labels=True, node_color='skyblue', node_size=300, ax=ax[0, 0])
-            ax[0, 0].set_title(f'Original {self.base_graph_model} graph')
 
         # Randomly determine the number of motifs to embed
         num_motifs = random.randint(self.min_num_motifs, self.max_num_motifs)
@@ -135,7 +133,7 @@ class GraphWithMotifs:
             if self.log:  # Check if logging is enabled
                 logging.info(f'motif_{motif_i}: {nodes_to_replace}')
 
-            # change BA nodes' color
+            # change motif nodes' color
             for replaceable_node in nodes_to_replace:
                 # if overlapping motifs not allowed, color nodes of each motif differently
                 if not self.motif_overlap:
@@ -144,7 +142,7 @@ class GraphWithMotifs:
                 else:
                     node_colors[replaceable_node] = 'lightcoral'
 
-            # Create the BA model adjacency matrix for the motif
+            # Create the motif model adjacency matrix
             if motif_size >= self.m:
                 if self.motif_graph_model == 'ER':
                     motif_adjacency = nx.to_numpy_array(nx.erdos_renyi_graph(motif_size, self.p))
@@ -183,18 +181,18 @@ class GraphWithMotifs:
                 logging.warning(f"{self.motif_graph_model} model requires motif_size >= m")
                 return None
 
-            # Replace selected nodes in ER adjacency matrix with BA model motif
+            # Replace selected nodes in base graph adjacency matrix with motif model
             for i, idx in enumerate(nodes_to_replace):
                 base_adjacency[idx, nodes_to_replace] = motif_adjacency[i]
 
-        # Ensure that none of the nodes have degree 0 in the original ER graph
+        # Ensure that none of the nodes have degree 0 in the original base graph
         if np.sum(base_adjacency.sum(axis=1) == 0) > 0:
             logging.warning(f"{self.base_graph_model} with {self.motif_graph_model} subgraph contains nodes with degree 0:"
                             "{np.sum(base_adjacency.sum(axis=1) == 0)}")
 
         # Connect zero-degree nodes to random other nodes
-        final_graph = nx.Graph(base_adjacency)
-        degree_dict = dict(final_graph.degree())
+        self.final_graph = nx.Graph(base_adjacency)
+        degree_dict = dict(self.final_graph.degree())
         zero_degree_nodes = [k for k in degree_dict if degree_dict[k] == 0]
         logging.info(f'Nodes with zero degree in {self.base_graph_model} with {self.motif_graph_model} subgraph: {zero_degree_nodes}')
         nonzero_degrees = np.sort([v for k, v in degree_dict.items() if k not in zero_degree_nodes] )
@@ -205,47 +203,92 @@ class GraphWithMotifs:
             sample_degree = np.random.choice(degrees, p=probs) 
             sample_connections = np.random.choice(nonzero_degree_nodes, size=(sample_degree,), replace=False)
             for node2 in sample_connections: 
-                final_graph.add_edge(node1, node2)
+                self.final_graph.add_edge(node1, node2)
 
-        degree_dict = dict(final_graph.degree())
+        degree_dict = dict(self.final_graph.degree())
         zero_degree_nodes = [k for k in degree_dict if degree_dict[k] == 0]
         if len(zero_degree_nodes) == 0:
             logging.info("Nodes with degree 0 connected!")
         # update adjacency matrix
-        base_adjacency = nx.to_numpy_array(final_graph)
+        base_adjacency = nx.to_numpy_array(self.final_graph)
 
-        # Plot final graph with subgraphs
+        # Plot graphs
         if self.plot:
-            pos = nx.spring_layout(final_graph)  # Position nodes using a layout algorithm
-            edge_color_l = [edge_colors.get((u, v), 'gray') for u, v in final_graph.edges()]
-            nx.draw_networkx(final_graph, pos, with_labels=True, node_color=node_colors, node_size=300, edge_color=edge_color_l, ax=ax[0, 1])
-            ax[0, 1].set_title(f'{self.base_graph_model} graph with {num_motifs} {self.motif_graph_model} subgraphs')
+            _, ax = plt.subplots(3, 2, figsize=(14, 10))
+            self.plot_base_graph(ax[0, 0])
+            self.plot_final_graph_with_motifs(edge_colors, node_colors, num_motifs, ax[0, 1])
+            self.plot_degree_distribution(ax[1, 0])
+            self.plot_clustering_coefficient_distribution(ax[1, 1])
+            self.plot_betweenness_centrality_distribution(ax[2, 0])
 
-            # Plot degree distribution
-            plt.subplot(223)
-            for g, l, c in zip([base_graph, final_graph],
-                               [f'{self.base_graph_model}', f'{self.base_graph_model} with {self.motif_graph_model} subgraphs'],
-                               ['skyblue', 'lightcoral']):
-                ax[1, 0].plot(np.sort([j for _, j in g.degree()])[::-1], marker='.', alpha=0.7, label=l, color=c)
-                ax[1, 0].set_xlabel('Degree')
-                ax[1, 0].set_ylabel('Frequency')
-                ax[1, 0].set_title('Degree Distribution')
-                ax[1, 0].legend()
-
-            # plot Clustering coefficient plot
-            for g, l, c in zip([base_graph, final_graph],
-                               [f'{self.base_graph_model}', f'{self.base_graph_model} with {self.motif_graph_model} subgraphs'],
-                               ['skyblue', 'lightcoral']):
-                clustering_coefficient = nx.average_clustering(g)
-                # Create a histogram of clustering coefficients
-                clustering_values = list(nx.clustering(g).values())
-                ax[1, 1].hist(clustering_values, bins=20, alpha=0.5, color=c, label=l)
-                # Add a vertical line for the average clustering coefficient
-                ax[1, 1].axvline(x=clustering_coefficient, linestyle='--', color=c, 
-                            label=f'avg clustering coeff ({clustering_coefficient:.2f})')
-                ax[1, 1].set_xlabel('Clustering Coefficient')
-                ax[1, 1].set_ylabel('Frequency')
-                ax[1, 1].set_title('Clustering Coefficient')
-                ax[1, 1].legend()
-
+        # return base graph adjacency matrix
         return base_adjacency
+
+
+    def plot_base_graph(self, ax):
+        """
+        Plot base graph
+        """
+        nx.draw_networkx(self.base_graph, with_labels=True, node_color='skyblue', node_size=300, ax=ax)
+        ax.set_title(f'Original {self.base_graph_model} graph')
+
+    def plot_final_graph_with_motifs(self, edge_colors, node_colors, num_motifs, ax):
+        """
+        Plot final graph with motifs
+        """
+        pos = nx.spring_layout(self.final_graph)  # Position nodes using a layout algorithm
+        edge_color_l = [edge_colors.get((u, v), 'gray') for u, v in self.final_graph.edges()]
+        nx.draw_networkx(self.final_graph, pos, with_labels=True, node_color=node_colors, node_size=300, edge_color=edge_color_l, ax=ax)
+        ax.set_title(f'{self.base_graph_model} graph with {num_motifs} {self.motif_graph_model} subgraphs')
+
+    def plot_degree_distribution(self, ax):
+        """
+        Plot degree distribution
+        """
+        for g, l, c in zip([self.base_graph, self.final_graph],
+                            [f'{self.base_graph_model}', f'{self.base_graph_model} with {self.motif_graph_model} subgraphs'],
+                            ['skyblue', 'lightcoral']):
+            ax.plot(np.sort([j for _, j in g.degree()])[::-1], marker='.', alpha=0.7, label=l, color=c)
+            ax.set_xlabel('Degree')
+            ax.set_ylabel('Frequency')
+            ax.set_title('Degree Distribution')
+            ax.legend()
+
+    def plot_clustering_coefficient_distribution(self, ax):
+        """
+        Plot Clustering coefficient plot
+        """
+        for g, l, c in zip([self.base_graph, self.final_graph],
+                            [f'{self.base_graph_model}', f'{self.base_graph_model} with {self.motif_graph_model} subgraphs'],
+                            ['skyblue', 'lightcoral']):
+            clustering_coefficient = nx.average_clustering(g)
+            # Create a histogram of clustering coefficients
+            clustering_values = list(nx.clustering(g).values())
+            ax.hist(clustering_values, bins=20, alpha=0.5, color=c, label=l)
+            # Add a vertical line for the average clustering coefficient
+            ax.axvline(x=clustering_coefficient, linestyle='--', color=c, 
+                        label=f'avg clustering coeff ({clustering_coefficient:.2f})')
+            ax.set_xlabel('Clustering Coefficient')
+            ax.set_ylabel('Frequency')
+            ax.set_title('Clustering Coefficient')
+            ax.legend()
+
+    def plot_betweenness_centrality_distribution(self, ax):
+        """
+        Plot betweenness centrality plot 
+        """
+        for g, l, c in zip([self.base_graph, self.final_graph],
+                           [f'{self.base_graph_model}', f'{self.base_graph_model} with {self.motif_graph_model} subgraphs'],
+                           ['skyblue', 'lightcoral']):
+            betweenness_centrality = nx.betweenness_centrality(g)
+            # Create a histogram of betweenness centrality values
+            betweenness_values = list(betweenness_centrality.values())
+            ax.hist(betweenness_values, bins=20, alpha=0.5, color=c, label=l)
+            # Add a vertical line for the average betweenness centrality
+            avg_betweenness_centrality = np.mean(betweenness_values)
+            ax.axvline(x=avg_betweenness_centrality, linestyle='--', color=c, 
+                        label=f'avg betweenness centrality ({avg_betweenness_centrality:.3f})')
+            ax.set_xlabel('Betweenness Centrality')
+            ax.set_ylabel('Frequency')
+            ax.set_title('Betweenness Centrality Distribution')
+            ax.legend()
