@@ -62,13 +62,23 @@ class GraphAnalyzer:
         """
         Calculate the graph properties for the given graph.
         """
+        communities = nx.algorithms.community.greedy_modularity_communities(graph)
         properties = {
             "Number of Nodes": len(graph.nodes()),
             "Number of Edges": len(graph.edges()),
             "Average Degree": f'{np.mean(list(dict(graph.degree()).values())):.3f}',
+            # measure of the degree to which its neighbors are connected to each other. 
+            # The average clustering coefficient provides a measure of the degree to which the graph is clustered or "cliquish".
             "Clustering Coefficient": f'{nx.average_clustering(graph):.3f}',
+            # measure of the degree to which a node lies on the shortest path between other nodes in the graph.
+            # Nodes with high betweenness centrality are important for maintaining the connectivity of the graph.
             "Betweenness Centrality": f'{np.mean(list(nx.betweenness_centrality(graph).values())):.4f}',
-            "Average Shortest Path Length": f'{nx.average_shortest_path_length(graph):.3f}'
+            # Modularity is a measure of the degree to which a graph can be divided into communities or modules. 
+            # In genetic datasets, modularity can be used to identify groups of genes that are co-expressed across different samples.
+            "Modularity": f'{nx.algorithms.community.modularity(graph, communities):.3f}',
+             # Assortativity is a measure of the tendency of nodes in a graph to be connected to other nodes with similar degrees. 
+             # In genetic datasets, assortativity can be used to identify genes that are highly connected to other genes with similar expression levels.
+            "Assortativity": f'{nx.degree_assortativity_coefficient(graph):.3f}',
         }
         return properties
 
@@ -136,7 +146,7 @@ class GraphAnalyzer:
         self.plot_degree_distribution(ax[0, 0])
         self.plot_clustering_coefficient_distribution(ax[0, 1])
         self.plot_betweenness_centrality_distribution(ax[1, 0])
-        self.plot_avg_shortest_path_length(ax[1, 1])
+        self.plot_modularity(ax[1, 1])
 
     def plot_degree_distribution(self, ax):
         """
@@ -190,15 +200,16 @@ class GraphAnalyzer:
             ax.set_title('Betweenness Centrality Distribution')
             ax.legend()
 
-    def plot_avg_shortest_path_length(self, ax):
-        path_lengths = []
+    def plot_modularity(self, ax):
+        modularities = []
         for g in [self.graph, self.er_model, self.ba_model, self.ws_model]:
-            path_lengths.append(nx.average_shortest_path_length(g))
+            communities = nx.algorithms.community.greedy_modularity_communities(g)
+            modularities.append(nx.algorithms.community.modularity(g, communities))
        
         ax.bar(['Loaded Graph', 'Erdos-Renyi', 'Barabasi-Albert', 'Watts-Strogatz'], 
-               path_lengths, 
+               modularities, 
                color=['skyblue', 'lightcoral', 'lightgreen', 'pink'])
         ax.set_xlabel('Graph Type')
-        ax.set_ylabel('Avg Path length')
-        ax.set_title('Avg Path Length')
+        ax.set_ylabel('Modularity')
+        ax.set_title('Modularity')
 
