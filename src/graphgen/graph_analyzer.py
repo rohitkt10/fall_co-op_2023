@@ -130,18 +130,10 @@ class GraphAnalyzer:
         Visualize the loaded graph, Erdos-Renyi, Barabasi-Albert, and Watts-Strogatz models.
         """
         _, ax = plt.subplots(2, 2, figsize=(12, 8))
-        pos = nx.spring_layout(self.graph)
-        nx.draw_networkx(self.graph, pos, with_labels=False, node_size=10, ax=ax[0, 0])
-        ax[0, 0].set_title(self.dataset_name)
-        pos = nx.spring_layout(self.er_model)
-        nx.draw_networkx(self.er_model, pos, with_labels=False, node_size=10, ax=ax[0, 1])
-        ax[0, 1].set_title('Erdo-Renyi')
-        pos = nx.spring_layout(self.ba_model)
-        nx.draw_networkx(self.ba_model, pos, with_labels=False, node_size=10, ax=ax[1, 0])
-        ax[1, 0].set_title('Barabasi-Albert')
-        pos = nx.spring_layout(self.ws_model)
-        nx.draw_networkx(self.ws_model, pos, with_labels=False, node_size=10, ax=ax[1, 1])
-        ax[1, 1].set_title('Watts-Strogatz')
+        self.graph_visualizer.plot_network_graph(ax[0, 0], graph_index=0, with_labels=False, node_size=10)
+        self.graph_visualizer.plot_network_graph(ax[0, 1], graph_index=1, with_labels=False, node_size=10)
+        self.graph_visualizer.plot_network_graph(ax[1, 0], graph_index=2, with_labels=False, node_size=10)
+        self.graph_visualizer.plot_network_graph(ax[1, 1], graph_index=3, with_labels=False, node_size=10)
 
     def visualize_distribution(self):
         """

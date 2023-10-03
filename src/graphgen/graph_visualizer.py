@@ -21,6 +21,23 @@ class GraphVisualizer:
         self.graph_names = graph_names
         self.colors = colors
 
+    def plot_network_graph(self, ax, graph_index=0, with_labels=False, node_size=10):
+        """
+        Plot network graph
+
+        Parameters:
+        -----------
+        graph_index: int
+            Index of the graph to plot
+        with_labels: bool
+            Whether to plot labels or not
+        node_size: int
+            Size of the node
+        """
+        pos = nx.spring_layout(self.graphs[graph_index])
+        nx.draw_networkx(self.graphs[graph_index], pos, with_labels=with_labels, node_size=node_size, ax=ax)
+        ax.set_title(self.graph_names[graph_index])
+
     def plot_degree_distribution(self, ax):
         """
         Plot degree distribution
@@ -81,3 +98,22 @@ class GraphVisualizer:
         ax.set_xlabel('Graph Type')
         ax.set_ylabel('Modularity')
         ax.set_title('Modularity')
+
+    def plot_path_length_distribution(self, ax, graph_index=0):
+        """
+        Plot the distribution of shortest path lengths between nodes in the graph.
+        Parameters:
+        -----------
+        graph_index: int
+            Index of the graph to plot
+        """
+        path_lengths = []
+        for node1 in self.graphs[graph_index].nodes():
+            for node2 in self.graphs[graph_index].nodes():
+                if node1 != node2:
+                    path_lengths.append(nx.shortest_path_length(self.graphs[graph_index], node1, node2))
+        path_length_counts = dict(zip(*np.unique(path_lengths, return_counts=True)))
+        ax.bar(path_length_counts.keys(), path_length_counts.values())
+        ax.set_xlabel('Shortest Path Length')
+        ax.set_ylabel('Frequency')
+        ax.set_title('Path Length Distribution')
