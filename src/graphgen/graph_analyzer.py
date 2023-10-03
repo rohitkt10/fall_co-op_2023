@@ -2,6 +2,7 @@ import json
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+from .graph_visualizer import GraphVisualizer
 
 class GraphAnalyzer:
     """
@@ -29,6 +30,10 @@ class GraphAnalyzer:
         self.er_model = self.generate_erdos_renyi()
         self.ba_model = self.generate_barabasi_albert()
         self.ws_model = self.generate_watts_strogatz()
+        self.graph_visualizer = GraphVisualizer(
+            [self.graph, self.er_model, self.ba_model, self.ws_model], 
+            [self.dataset_name, 'Erdos-Renyi', 'Barabasi-Albert', 'Watts-Strogatz'],
+            ['skyblue', 'lightcoral', 'lightgreen', 'pink'])
 
     def load_graph(self):
         """
@@ -125,91 +130,19 @@ class GraphAnalyzer:
         Visualize the loaded graph, Erdos-Renyi, Barabasi-Albert, and Watts-Strogatz models.
         """
         _, ax = plt.subplots(2, 2, figsize=(12, 8))
-        pos = nx.spring_layout(self.graph)
-        nx.draw_networkx(self.graph, pos, with_labels=False, node_size=10, ax=ax[0, 0])
-        ax[0, 0].set_title(self.dataset_name)
-        pos = nx.spring_layout(self.er_model)
-        nx.draw_networkx(self.er_model, pos, with_labels=False, node_size=10, ax=ax[0, 1])
-        ax[0, 1].set_title('Erdo-Renyi')
-        pos = nx.spring_layout(self.ba_model)
-        nx.draw_networkx(self.ba_model, pos, with_labels=False, node_size=10, ax=ax[1, 0])
-        ax[1, 0].set_title('Barabasi-Albert')
-        pos = nx.spring_layout(self.ws_model)
-        nx.draw_networkx(self.ws_model, pos, with_labels=False, node_size=10, ax=ax[1, 1])
-        ax[1, 1].set_title('Watts-Strogatz')
+        self.graph_visualizer.plot_network_graph(ax[0, 0], graph_index=0, with_labels=False, node_size=10)
+        self.graph_visualizer.plot_network_graph(ax[0, 1], graph_index=1, with_labels=False, node_size=10)
+        self.graph_visualizer.plot_network_graph(ax[1, 0], graph_index=2, with_labels=False, node_size=10)
+        self.graph_visualizer.plot_network_graph(ax[1, 1], graph_index=3, with_labels=False, node_size=10)
 
     def visualize_distribution(self):
         """
         Visualize the degree, clustering coefficient, and betweenness centrality distributions.
         """
         _, ax = plt.subplots(2, 2, figsize=(12, 8))
-        self.plot_degree_distribution(ax[0, 0])
-        self.plot_clustering_coefficient_distribution(ax[0, 1])
-        self.plot_betweenness_centrality_distribution(ax[1, 0])
-        self.plot_modularity(ax[1, 1])
-
-    def plot_degree_distribution(self, ax):
-        """
-        Plot degree distribution
-        """
-        for g, l, c in zip([self.graph, self.er_model, self.ba_model, self.ws_model],
-                            [self.dataset_name, 'Erdos-Renyi', 'Barabasi-Albert', 'Watts-Strogatz'],
-                            ['skyblue', 'lightcoral', 'lightgreen', 'pink']):
-            ax.plot(np.sort([j for _, j in g.degree()])[::-1], marker='.', alpha=0.7, label=l, color=c)
-            ax.set_xlabel('Degree')
-            ax.set_ylabel('Frequency')
-            ax.set_title('Degree Distribution')
-            ax.legend()
-
-    def plot_clustering_coefficient_distribution(self, ax):
-        """
-        Plot Clustering coefficient plot
-        """
-        for g, l, c in zip([self.graph, self.er_model, self.ba_model, self.ws_model],
-                            [self.dataset_name, 'Erdos-Renyi', 'Barabasi-Albert', 'Watts-Strogatz'],
-                            ['skyblue', 'lightcoral', 'lightgreen', 'pink']):
-            clustering_coefficient = nx.average_clustering(g)
-            # Create a histogram of clustering coefficients
-            clustering_values = list(nx.clustering(g).values())
-            ax.hist(clustering_values, bins=20, alpha=0.5, color=c, label=l)
-            # Add a vertical line for the average clustering coefficient
-            ax.axvline(x=clustering_coefficient, linestyle='--', color=c, 
-                        label=f'avg clustering coeff ({clustering_coefficient:.2f})')
-            ax.set_xlabel('Clustering Coefficient')
-            ax.set_ylabel('Frequency')
-            ax.set_title('Clustering Coefficient')
-            ax.legend()
-
-    def plot_betweenness_centrality_distribution(self, ax):
-        """
-        Plot betweenness centrality plot 
-        """
-        for g, l, c in zip([self.graph, self.er_model, self.ba_model, self.ws_model],
-                            [self.dataset_name, 'Erdos-Renyi', 'Barabasi-Albert', 'Watts-Strogatz'],
-                            ['skyblue', 'lightcoral', 'lightgreen', 'pink']):
-            betweenness_centrality = nx.betweenness_centrality(g)
-            # Create a histogram of betweenness centrality values
-            betweenness_values = list(betweenness_centrality.values())
-            ax.hist(betweenness_values, bins=20, alpha=0.5, color=c, label=l)
-            # Add a vertical line for the average betweenness centrality
-            avg_betweenness_centrality = np.mean(betweenness_values)
-            ax.axvline(x=avg_betweenness_centrality, linestyle='--', color=c, 
-                        label=f'avg betweenness centrality ({avg_betweenness_centrality:.3f})')
-            ax.set_xlabel('Betweenness Centrality')
-            ax.set_ylabel('Frequency')
-            ax.set_title('Betweenness Centrality Distribution')
-            ax.legend()
-
-    def plot_modularity(self, ax):
-        modularities = []
-        for g in [self.graph, self.er_model, self.ba_model, self.ws_model]:
-            communities = nx.algorithms.community.greedy_modularity_communities(g)
-            modularities.append(nx.algorithms.community.modularity(g, communities))
-       
-        ax.bar(['Loaded Graph', 'Erdos-Renyi', 'Barabasi-Albert', 'Watts-Strogatz'], 
-               modularities, 
-               color=['skyblue', 'lightcoral', 'lightgreen', 'pink'])
-        ax.set_xlabel('Graph Type')
-        ax.set_ylabel('Modularity')
-        ax.set_title('Modularity')
-
+        self.graph_visualizer.plot_degree_distribution(ax[0, 0])
+        self.graph_visualizer.plot_clustering_coefficient_distribution(ax[0, 1])
+        self.graph_visualizer.plot_betweenness_centrality_distribution(ax[1, 0])
+        self.graph_visualizer.plot_modularity(ax[1, 1])
+        plt.tight_layout()
+        plt.show()

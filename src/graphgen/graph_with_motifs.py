@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import numpy as np
 import logging
+from .graph_visualizer import GraphVisualizer
 
 
 class GraphWithMotifs:
@@ -61,6 +62,7 @@ class GraphWithMotifs:
         self.log = log
         self.base_graph = None  # base graph created as per the specified model
         self.final_graph = None # final graph with motifs embedded
+        self.graph_visualizer = None # GraphVisualizer object
 
 
     def create_graph_with_motif_adjacency(self):
@@ -165,13 +167,19 @@ class GraphWithMotifs:
 
         # Plot graphs
         if self.plot:
+            self.graph_visualizer = GraphVisualizer(
+                [self.base_graph, self.final_graph], 
+                [f'Base {self.base_graph_model} graph', f'{self.base_graph_model} with {self.motif_graph_model} subgraphs'], 
+                ['skyblue', 'lightcoral'])
             _, ax = plt.subplots(3, 2, figsize=(14, 10))
-            self.plot_base_graph(ax[0, 0])
+            self.graph_visualizer.plot_network_graph(ax[0, 0], graph_index=0, with_labels=True, node_size=300)
             self.plot_final_graph_with_motifs(edge_colors, node_colors, num_motifs, ax[0, 1])
-            self.plot_degree_distribution(ax[1, 0])
-            self.plot_clustering_coefficient_distribution(ax[1, 1])
-            self.plot_betweenness_centrality_distribution(ax[2, 0])
-            self.plot_path_length_distribution(ax[2, 1])
+            self.graph_visualizer.plot_degree_distribution(ax[1, 0])
+            self.graph_visualizer.plot_clustering_coefficient_distribution(ax[1, 1])
+            self.graph_visualizer.plot_betweenness_centrality_distribution(ax[2, 0])
+            self.graph_visualizer.plot_path_length_distribution(ax[2, 1], graph_index=1)
+            plt.tight_layout()
+            plt.show()
 
         # return updated adjacency matrix
         base_adjacency = nx.to_numpy_array(self.final_graph)
@@ -230,13 +238,6 @@ class GraphWithMotifs:
             for node2 in sample_connections: 
                 self.final_graph.add_edge(node1, node2)
 
-    def plot_base_graph(self, ax):
-        """
-        Plot base graph
-        """
-        nx.draw_networkx(self.base_graph, with_labels=True, node_color='skyblue', node_size=300, ax=ax)
-        ax.set_title(f'Original {self.base_graph_model} graph')
-
     def plot_final_graph_with_motifs(self, edge_colors, node_colors, num_motifs, ax):
         """
         Plot final graph with motifs
@@ -245,70 +246,3 @@ class GraphWithMotifs:
         edge_color_l = [edge_colors.get((u, v), 'gray') for u, v in self.final_graph.edges()]
         nx.draw_networkx(self.final_graph, pos, with_labels=True, node_color=node_colors, node_size=300, edge_color=edge_color_l, ax=ax)
         ax.set_title(f'{self.base_graph_model} graph with {num_motifs} {self.motif_graph_model} subgraphs')
-
-    def plot_degree_distribution(self, ax):
-        """
-        Plot degree distribution
-        """
-        for g, l, c in zip([self.base_graph, self.final_graph],
-                            [f'{self.base_graph_model}', f'{self.base_graph_model} with {self.motif_graph_model} subgraphs'],
-                            ['skyblue', 'lightcoral']):
-            ax.plot(np.sort([j for _, j in g.degree()])[::-1], marker='.', alpha=0.7, label=l, color=c)
-            ax.set_xlabel('Degree')
-            ax.set_ylabel('Frequency')
-            ax.set_title('Degree Distribution')
-            ax.legend()
-
-    def plot_clustering_coefficient_distribution(self, ax):
-        """
-        Plot Clustering coefficient plot
-        """
-        for g, l, c in zip([self.base_graph, self.final_graph],
-                            [f'{self.base_graph_model}', f'{self.base_graph_model} with {self.motif_graph_model} subgraphs'],
-                            ['skyblue', 'lightcoral']):
-            clustering_coefficient = nx.average_clustering(g)
-            # Create a histogram of clustering coefficients
-            clustering_values = list(nx.clustering(g).values())
-            ax.hist(clustering_values, bins=20, alpha=0.5, color=c, label=l)
-            # Add a vertical line for the average clustering coefficient
-            ax.axvline(x=clustering_coefficient, linestyle='--', color=c, 
-                        label=f'avg clustering coeff ({clustering_coefficient:.2f})')
-            ax.set_xlabel('Clustering Coefficient')
-            ax.set_ylabel('Frequency')
-            ax.set_title('Clustering Coefficient')
-            ax.legend()
-
-    def plot_betweenness_centrality_distribution(self, ax):
-        """
-        Plot betweenness centrality plot 
-        """
-        for g, l, c in zip([self.base_graph, self.final_graph],
-                           [f'{self.base_graph_model}', f'{self.base_graph_model} with {self.motif_graph_model} subgraphs'],
-                           ['skyblue', 'lightcoral']):
-            betweenness_centrality = nx.betweenness_centrality(g)
-            # Create a histogram of betweenness centrality values
-            betweenness_values = list(betweenness_centrality.values())
-            ax.hist(betweenness_values, bins=20, alpha=0.5, color=c, label=l)
-            # Add a vertical line for the average betweenness centrality
-            avg_betweenness_centrality = np.mean(betweenness_values)
-            ax.axvline(x=avg_betweenness_centrality, linestyle='--', color=c, 
-                        label=f'avg betweenness centrality ({avg_betweenness_centrality:.3f})')
-            ax.set_xlabel('Betweenness Centrality')
-            ax.set_ylabel('Frequency')
-            ax.set_title('Betweenness Centrality Distribution')
-            ax.legend()
-
-    def plot_path_length_distribution(self, ax):
-        """
-        Plot the distribution of shortest path lengths between nodes in the graph.
-        """
-        path_lengths = []
-        for node1 in self.final_graph.nodes():
-            for node2 in self.final_graph.nodes():
-                if node1 != node2:
-                    path_lengths.append(nx.shortest_path_length(self.final_graph, node1, node2))
-        path_length_counts = dict(zip(*np.unique(path_lengths, return_counts=True)))
-        ax.bar(path_length_counts.keys(), path_length_counts.values())
-        ax.set_xlabel('Shortest Path Length')
-        ax.set_ylabel('Frequency')
-        ax.set_title('Path Length Distribution')
