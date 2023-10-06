@@ -8,7 +8,7 @@ class GraphAnalyzer:
     """
     A class for analyzing and visualizing graphs.
     """
-    def __init__(self, edge_indices_file=None, nodes_file_name=None, dataset_name=None):
+    def __init__(self, edge_indices_file=None, nodes_file_name=None, dataset_name=None, generate_graphs=True):
         """
         Initializes a GraphAnalyzer object with the given edge indices file, nodes file name, and dataset name.
 
@@ -21,19 +21,21 @@ class GraphAnalyzer:
         - edge_indices_file: str   - The path to the edge indices file
         - nodes_file_name: str     - The path to the nodes file
         - dataset_name: str        - The name of the dataset
+        - generate_graphs: bool    - Whether to generate the Erdos-Renyi, Barabasi-Albert, and Watts-Strogatz models
         """
         self.edge_indices_file = edge_indices_file
         self.nodes_file_name = nodes_file_name
         self.dataset_name = dataset_name
         self.graph = None
         self.load_graph()
-        self.er_model = self.generate_erdos_renyi()
-        self.ba_model = self.generate_barabasi_albert()
-        self.ws_model = self.generate_watts_strogatz()
-        self.graph_visualizer = GraphVisualizer(
-            [self.graph, self.er_model, self.ba_model, self.ws_model], 
-            [self.dataset_name, 'Erdos-Renyi', 'Barabasi-Albert', 'Watts-Strogatz'],
-            ['skyblue', 'lightcoral', 'lightgreen', 'pink'])
+        if generate_graphs:
+            self.er_model = self.generate_erdos_renyi()
+            self.ba_model = self.generate_barabasi_albert()
+            self.ws_model = self.generate_watts_strogatz()
+            self.graph_visualizer = GraphVisualizer(
+                [self.graph, self.er_model, self.ba_model, self.ws_model], 
+                [self.dataset_name, 'Erdos-Renyi', 'Barabasi-Albert', 'Watts-Strogatz'],
+                ['skyblue', 'lightcoral', 'lightgreen', 'pink'])
 
     def load_graph(self):
         """
@@ -62,6 +64,12 @@ class GraphAnalyzer:
             assert np.array_equal(graph_adj, graph_adj.T)
         else:
             raise Exception("No edge indices file provided")
+        
+    def get_graph(self):
+        """
+        Return the loaded graph.
+        """
+        return self.graph
         
     def _calculate_graph_properties(self, graph):
         """
@@ -146,3 +154,21 @@ class GraphAnalyzer:
         self.graph_visualizer.plot_modularity(ax[1, 1])
         plt.tight_layout()
         plt.show()
+
+    def calculate_jaccard_similarity(self):
+        """
+        Calculate the Jaccard similarity between the loaded graph and Erdos-Renyi, Barabasi-Albert, and Watts-Strogatz models.
+        """
+        # Calculate the Jaccard similarity indices for each generated graph
+        jaccard_er = nx.jaccard_coefficient(self.graph, self.er_model.edges())
+        jaccard_ba = nx.jaccard_coefficient(self.graph, self.ba_model.edges())
+        jaccard_ws = nx.jaccard_coefficient(self.graph, self.ws_model.edges())
+
+        # Extract the Jaccard similarity coefficients
+        jaccard_coefficients = {
+            'Erdos-Renyi': sum([coeff for _, _, coeff in jaccard_er]) / len(self.er_model.edges()),
+            'Barabasi-Albert': sum([coeff for _, _, coeff in jaccard_ba]) / len(self.ba_model.edges()),
+            'Watts-Strogatz': sum([coeff for _, _, coeff in jaccard_ws]) / len(self.ws_model.edges())
+            }
+
+        return jaccard_coefficients
