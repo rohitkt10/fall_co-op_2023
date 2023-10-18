@@ -49,7 +49,7 @@ class GraphVisualizer:
             ax.set_title('Degree Distribution')
             ax.legend()
 
-    def plot_clustering_coefficient_distribution(self, ax):
+    def plot_clustering_coefficient_distribution(self, ax, show_avg=True):
         """
         Plot Clustering coefficient plot
         """
@@ -59,15 +59,16 @@ class GraphVisualizer:
             clustering_values = list(nx.clustering(g).values())
             ax.plot(sorted(clustering_values, reverse=True), marker='.', alpha=0.7, label=l, color=c)
             # ax.hist(clustering_values, bins=20, alpha=0.5, color=c, label=l)
-            # Add a vertical line for the average clustering coefficient
-            ax.axvline(x=clustering_coefficient, linestyle='--', color=c, 
-                        label=f'avg clustering coeff ({clustering_coefficient:.2f})')
+            if show_avg:
+                # Add a vertical line for the average clustering coefficient
+                ax.axvline(x=clustering_coefficient, linestyle='--', color=c, 
+                            label=f'avg clustering coeff ({clustering_coefficient:.2f})')
             ax.set_xlabel('Clustering Coefficient')
             ax.set_ylabel('Frequency')
             ax.set_title('Clustering Coefficient')
             ax.legend()
 
-    def plot_betweenness_centrality_distribution(self, ax):
+    def plot_betweenness_centrality_distribution(self, ax, show_avg=True):
         """
         Plot betweenness centrality plot 
         """
@@ -75,11 +76,13 @@ class GraphVisualizer:
             betweenness_centrality = nx.betweenness_centrality(g)
             # Create a histogram of betweenness centrality values
             betweenness_values = list(betweenness_centrality.values())
+            # ax.plot(sorted(betweenness_centrality, reverse=True), marker='.', alpha=0.7, label=l, color=c)
             ax.hist(betweenness_values, bins=20, alpha=0.5, color=c, label=l)
-            # Add a vertical line for the average betweenness centrality
-            avg_betweenness_centrality = np.mean(betweenness_values)
-            ax.axvline(x=avg_betweenness_centrality, linestyle='--', color=c, 
-                        label=f'avg betweenness centrality ({avg_betweenness_centrality:.3f})')
+            if show_avg:
+                # Add a vertical line for the average betweenness centrality
+                avg_betweenness_centrality = np.mean(betweenness_values)
+                ax.axvline(x=avg_betweenness_centrality, linestyle='--', color=c, 
+                            label=f'avg betweenness centrality ({avg_betweenness_centrality:.3f})')
             ax.set_xlabel('Betweenness Centrality')
             ax.set_ylabel('Frequency')
             ax.set_title('Betweenness Centrality Distribution')
