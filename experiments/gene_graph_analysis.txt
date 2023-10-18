@@ -1,126 +1,126 @@
 Gene Graph Analysis
 me
-Loaded Graph: {'Number of Nodes': 1361, 'Number of Edges': 13157, 'Average Degree': '19.334', 'Clustering Coefficient': '0.286', 'Betweenness Centrality': '0.0014', 'Modularity': '0.469', 'Assortativity': '0.208'}
-Erdos-Renyi: {'Number of Nodes': 1361, 'Number of Edges': 13085, 'Average Degree': '19.229', 'Clustering Coefficient': '0.014', 'Betweenness Centrality': '0.0013', 'Modularity': '0.189', 'Assortativity': '-0.000'}
-Barabasi-Albert: {'Number of Nodes': 1361, 'Number of Edges': 6780, 'Average Degree': '9.963', 'Clustering Coefficient': '0.037', 'Betweenness Centrality': '0.0015', 'Modularity': '0.281', 'Assortativity': '-0.056'}
-Watts-Strogatz: {'Number of Nodes': 1361, 'Number of Edges': 2722, 'Average Degree': '4.000', 'Clustering Coefficient': '0.254', 'Betweenness Centrality': '0.0045', 'Modularity': '0.764', 'Assortativity': '-0.049'}
-Powerlaw Cluster: {'Number of Nodes': 1361, 'Number of Edges': 6770, 'Average Degree': '9.949', 'Clustering Coefficient': '0.099', 'Betweenness Centrality': '0.0015', 'Modularity': '0.306', 'Assortativity': '-0.086'}
+Loaded Graph: {'Number of Nodes': 1361, 'Number of Edges': 13157, 'Average Degree': '19.334', 'Clustering Coefficient': '0.286', 'Betweenness Centrality': '0.0014', 'Modularity': '0.469', 'Assortativity': '0.208', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 1361, 'Number of Edges': 13501, 'Average Degree': '19.840', 'Clustering Coefficient': '0.014', 'Betweenness Centrality': '0.0013', 'Modularity': '0.189', 'Assortativity': '-0.001', 'Jaccard Similarity': '0.012'}
+Barabasi Albert: {'Number of Nodes': 1361, 'Number of Edges': 6780, 'Average Degree': '9.963', 'Clustering Coefficient': '0.033', 'Betweenness Centrality': '0.0015', 'Modularity': '0.282', 'Assortativity': '-0.059', 'Jaccard Similarity': '0.011'}
+Watts Strogatz: {'Number of Nodes': 1361, 'Number of Edges': 2722, 'Average Degree': '4.000', 'Clustering Coefficient': '0.265', 'Betweenness Centrality': '0.0046', 'Modularity': '0.771', 'Assortativity': '-0.037', 'Jaccard Similarity': '0.104'}
+Powerlaw Cluster: {'Number of Nodes': 1361, 'Number of Edges': 6768, 'Average Degree': '9.946', 'Clustering Coefficient': '0.100', 'Betweenness Centrality': '0.0015', 'Modularity': '0.305', 'Assortativity': '-0.102', 'Jaccard Similarity': '0.011'}
 
 DATASET: Apoptosis
-Loaded Graph: {'Number of Nodes': 1138, 'Number of Edges': 14033, 'Average Degree': '24.663', 'Clustering Coefficient': '0.332', 'Betweenness Centrality': '0.0014', 'Modularity': '0.320', 'Assortativity': '-0.052'}
-Erdos-Renyi: {'Number of Nodes': 1138, 'Number of Edges': 14187, 'Average Degree': '24.933', 'Clustering Coefficient': '0.022', 'Betweenness Centrality': '0.0014', 'Modularity': '0.163', 'Assortativity': '-0.000'}
-Barabasi-Albert: {'Number of Nodes': 1138, 'Number of Edges': 5665, 'Average Degree': '9.956', 'Clustering Coefficient': '0.036', 'Betweenness Centrality': '0.0018', 'Modularity': '0.279', 'Assortativity': '-0.056'}
-Watts-Strogatz: {'Number of Nodes': 1138, 'Number of Edges': 2276, 'Average Degree': '4.000', 'Clustering Coefficient': '0.256', 'Betweenness Centrality': '0.0053', 'Modularity': '0.769', 'Assortativity': '-0.028'}
-Powerlaw Cluster: {'Number of Nodes': 1138, 'Number of Edges': 5657, 'Average Degree': '9.942', 'Clustering Coefficient': '0.112', 'Betweenness Centrality': '0.0017', 'Modularity': '0.301', 'Assortativity': '-0.094'}
+Loaded Graph: {'Number of Nodes': 1138, 'Number of Edges': 14033, 'Average Degree': '24.663', 'Clustering Coefficient': '0.332', 'Betweenness Centrality': '0.0014', 'Modularity': '0.320', 'Assortativity': '-0.052', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 1138, 'Number of Edges': 13913, 'Average Degree': '24.452', 'Clustering Coefficient': '0.021', 'Betweenness Centrality': '0.0014', 'Modularity': '0.171', 'Assortativity': '-0.001', 'Jaccard Similarity': '0.019'}
+Barabasi Albert: {'Number of Nodes': 1138, 'Number of Edges': 5665, 'Average Degree': '9.956', 'Clustering Coefficient': '0.036', 'Betweenness Centrality': '0.0018', 'Modularity': '0.279', 'Assortativity': '-0.054', 'Jaccard Similarity': '0.019'}
+Watts Strogatz: {'Number of Nodes': 1138, 'Number of Edges': 2276, 'Average Degree': '4.000', 'Clustering Coefficient': '0.263', 'Betweenness Centrality': '0.0054', 'Modularity': '0.776', 'Assortativity': '-0.052', 'Jaccard Similarity': '0.060'}
+Powerlaw Cluster: {'Number of Nodes': 1138, 'Number of Edges': 5661, 'Average Degree': '9.949', 'Clustering Coefficient': '0.113', 'Betweenness Centrality': '0.0017', 'Modularity': '0.300', 'Assortativity': '-0.098', 'Jaccard Similarity': '0.019'}
 
 DATASET: Immune_Response
-Loaded Graph: {'Number of Nodes': 1709, 'Number of Edges': 22133, 'Average Degree': '25.902', 'Clustering Coefficient': '0.305', 'Betweenness Centrality': '0.0010', 'Modularity': '0.354', 'Assortativity': '0.060'}
-Erdos-Renyi: {'Number of Nodes': 1709, 'Number of Edges': 22210, 'Average Degree': '25.992', 'Clustering Coefficient': '0.015', 'Betweenness Centrality': '0.0010', 'Modularity': '0.162', 'Assortativity': '-0.010'}
-Barabasi-Albert: {'Number of Nodes': 1709, 'Number of Edges': 8520, 'Average Degree': '9.971', 'Clustering Coefficient': '0.029', 'Betweenness Centrality': '0.0012', 'Modularity': '0.284', 'Assortativity': '-0.067'}
-Watts-Strogatz: {'Number of Nodes': 1709, 'Number of Edges': 3418, 'Average Degree': '4.000', 'Clustering Coefficient': '0.272', 'Betweenness Centrality': '0.0039', 'Modularity': '0.784', 'Assortativity': '-0.037'}
-Powerlaw Cluster: {'Number of Nodes': 1709, 'Number of Edges': 8510, 'Average Degree': '9.959', 'Clustering Coefficient': '0.097', 'Betweenness Centrality': '0.0012', 'Modularity': '0.308', 'Assortativity': '-0.090'}
+Loaded Graph: {'Number of Nodes': 1709, 'Number of Edges': 22133, 'Average Degree': '25.902', 'Clustering Coefficient': '0.305', 'Betweenness Centrality': '0.0010', 'Modularity': '0.354', 'Assortativity': '0.060', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 1709, 'Number of Edges': 22109, 'Average Degree': '25.874', 'Clustering Coefficient': '0.015', 'Betweenness Centrality': '0.0010', 'Modularity': '0.163', 'Assortativity': '0.001', 'Jaccard Similarity': '0.013'}
+Barabasi Albert: {'Number of Nodes': 1709, 'Number of Edges': 8520, 'Average Degree': '9.971', 'Clustering Coefficient': '0.030', 'Betweenness Centrality': '0.0012', 'Modularity': '0.279', 'Assortativity': '-0.049', 'Jaccard Similarity': '0.013'}
+Watts Strogatz: {'Number of Nodes': 1709, 'Number of Edges': 3418, 'Average Degree': '4.000', 'Clustering Coefficient': '0.264', 'Betweenness Centrality': '0.0038', 'Modularity': '0.778', 'Assortativity': '-0.046', 'Jaccard Similarity': '0.078'}
+Powerlaw Cluster: {'Number of Nodes': 1709, 'Number of Edges': 8510, 'Average Degree': '9.959', 'Clustering Coefficient': '0.094', 'Betweenness Centrality': '0.0012', 'Modularity': '0.301', 'Assortativity': '-0.079', 'Jaccard Similarity': '0.013'}
 
 DATASET: Tau_Homeostasis
-Loaded Graph: {'Number of Nodes': 45, 'Number of Edges': 84, 'Average Degree': '3.733', 'Clustering Coefficient': '0.239', 'Betweenness Centrality': '0.0255', 'Modularity': '0.347', 'Assortativity': '-0.323'}
-Erdos-Renyi: {'Number of Nodes': 45, 'Number of Edges': 80, 'Average Degree': '3.556', 'Clustering Coefficient': '0.069', 'Betweenness Centrality': '0.0428', 'Modularity': '0.414', 'Assortativity': '0.033'}
-Barabasi-Albert: {'Number of Nodes': 45, 'Number of Edges': 200, 'Average Degree': '8.889', 'Clustering Coefficient': '0.304', 'Betweenness Centrality': '0.0218', 'Modularity': '0.215', 'Assortativity': '-0.145'}
-Watts-Strogatz: {'Number of Nodes': 45, 'Number of Edges': 90, 'Average Degree': '4.000', 'Clustering Coefficient': '0.271', 'Betweenness Centrality': '0.0525', 'Modularity': '0.566', 'Assortativity': '0.078'}
-Powerlaw Cluster: {'Number of Nodes': 45, 'Number of Edges': 199, 'Average Degree': '8.844', 'Clustering Coefficient': '0.332', 'Betweenness Centrality': '0.0211', 'Modularity': '0.213', 'Assortativity': '-0.268'}
+Loaded Graph: {'Number of Nodes': 45, 'Number of Edges': 84, 'Average Degree': '3.733', 'Clustering Coefficient': '0.239', 'Betweenness Centrality': '0.0255', 'Modularity': '0.347', 'Assortativity': '-0.323', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 45, 'Number of Edges': 87, 'Average Degree': '3.867', 'Clustering Coefficient': '0.087', 'Betweenness Centrality': '0.0429', 'Modularity': '0.422', 'Assortativity': '-0.047', 'Jaccard Similarity': '0.116'}
+Barabasi Albert: {'Number of Nodes': 45, 'Number of Edges': 200, 'Average Degree': '8.889', 'Clustering Coefficient': '0.403', 'Betweenness Centrality': '0.0210', 'Modularity': '0.214', 'Assortativity': '-0.222', 'Jaccard Similarity': '0.114'}
+Watts Strogatz: {'Number of Nodes': 45, 'Number of Edges': 90, 'Average Degree': '4.000', 'Clustering Coefficient': '0.371', 'Betweenness Centrality': '0.0636', 'Modularity': '0.570', 'Assortativity': '-0.050', 'Jaccard Similarity': '0.124'}
+Powerlaw Cluster: {'Number of Nodes': 45, 'Number of Edges': 197, 'Average Degree': '8.756', 'Clustering Coefficient': '0.360', 'Betweenness Centrality': '0.0208', 'Modularity': '0.208', 'Assortativity': '-0.176', 'Jaccard Similarity': '0.106'}
 
 DATASET: Proteostasis
-Loaded Graph: {'Number of Nodes': 2601, 'Number of Edges': 34873, 'Average Degree': '26.815', 'Clustering Coefficient': '0.319', 'Betweenness Centrality': '0.0008', 'Modularity': '0.521', 'Assortativity': '0.041'}
-Erdos-Renyi: {'Number of Nodes': 2601, 'Number of Edges': 34683, 'Average Degree': '26.669', 'Clustering Coefficient': '0.010', 'Betweenness Centrality': '0.0007', 'Modularity': '0.161', 'Assortativity': '0.001'}
-Barabasi-Albert: {'Number of Nodes': 2601, 'Number of Edges': 12980, 'Average Degree': '9.981', 'Clustering Coefficient': '0.019', 'Betweenness Centrality': '0.0009', 'Modularity': '0.279', 'Assortativity': '-0.034'}
-Watts-Strogatz: {'Number of Nodes': 2601, 'Number of Edges': 5202, 'Average Degree': '4.000', 'Clustering Coefficient': '0.265', 'Betweenness Centrality': '0.0027', 'Modularity': '0.788', 'Assortativity': '-0.029'}
-Powerlaw Cluster: {'Number of Nodes': 2601, 'Number of Edges': 12969, 'Average Degree': '9.972', 'Clustering Coefficient': '0.091', 'Betweenness Centrality': '0.0008', 'Modularity': '0.311', 'Assortativity': '-0.079'}
+Loaded Graph: {'Number of Nodes': 2601, 'Number of Edges': 34873, 'Average Degree': '26.815', 'Clustering Coefficient': '0.319', 'Betweenness Centrality': '0.0008', 'Modularity': '0.521', 'Assortativity': '0.041', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 2601, 'Number of Edges': 34609, 'Average Degree': '26.612', 'Clustering Coefficient': '0.010', 'Betweenness Centrality': '0.0007', 'Modularity': '0.159', 'Assortativity': '-0.002', 'Jaccard Similarity': '0.009'}
+Barabasi Albert: {'Number of Nodes': 2601, 'Number of Edges': 12980, 'Average Degree': '9.981', 'Clustering Coefficient': '0.020', 'Betweenness Centrality': '0.0009', 'Modularity': '0.279', 'Assortativity': '-0.048', 'Jaccard Similarity': '0.009'}
+Watts Strogatz: {'Number of Nodes': 2601, 'Number of Edges': 5202, 'Average Degree': '4.000', 'Clustering Coefficient': '0.262', 'Betweenness Centrality': '0.0027', 'Modularity': '0.784', 'Assortativity': '-0.054', 'Jaccard Similarity': '0.118'}
+Powerlaw Cluster: {'Number of Nodes': 2601, 'Number of Edges': 12972, 'Average Degree': '9.975', 'Clustering Coefficient': '0.090', 'Betweenness Centrality': '0.0008', 'Modularity': '0.306', 'Assortativity': '-0.069', 'Jaccard Similarity': '0.009'}
 
 DATASET: Synapse
-Loaded Graph: {'Number of Nodes': 2600, 'Number of Edges': 41857, 'Average Degree': '32.198', 'Clustering Coefficient': '0.294', 'Betweenness Centrality': '0.0007', 'Modularity': '0.454', 'Assortativity': '0.034'}
-Erdos-Renyi: {'Number of Nodes': 2600, 'Number of Edges': 41809, 'Average Degree': '32.161', 'Clustering Coefficient': '0.012', 'Betweenness Centrality': '0.0006', 'Modularity': '0.142', 'Assortativity': '-0.007'}
-Barabasi-Albert: {'Number of Nodes': 2600, 'Number of Edges': 12975, 'Average Degree': '9.981', 'Clustering Coefficient': '0.019', 'Betweenness Centrality': '0.0009', 'Modularity': '0.282', 'Assortativity': '-0.036'}
-Watts-Strogatz: {'Number of Nodes': 2600, 'Number of Edges': 5200, 'Average Degree': '4.000', 'Clustering Coefficient': '0.258', 'Betweenness Centrality': '0.0027', 'Modularity': '0.785', 'Assortativity': '-0.040'}
-Powerlaw Cluster: {'Number of Nodes': 2600, 'Number of Edges': 12968, 'Average Degree': '9.975', 'Clustering Coefficient': '0.088', 'Betweenness Centrality': '0.0009', 'Modularity': '0.305', 'Assortativity': '-0.072'}
+Loaded Graph: {'Number of Nodes': 2600, 'Number of Edges': 41857, 'Average Degree': '32.198', 'Clustering Coefficient': '0.294', 'Betweenness Centrality': '0.0007', 'Modularity': '0.454', 'Assortativity': '0.034', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 2600, 'Number of Edges': 41920, 'Average Degree': '32.246', 'Clustering Coefficient': '0.012', 'Betweenness Centrality': '0.0006', 'Modularity': '0.142', 'Assortativity': '-0.009', 'Jaccard Similarity': '0.012'}
+Barabasi Albert: {'Number of Nodes': 2600, 'Number of Edges': 12975, 'Average Degree': '9.981', 'Clustering Coefficient': '0.020', 'Betweenness Centrality': '0.0009', 'Modularity': '0.284', 'Assortativity': '-0.049', 'Jaccard Similarity': '0.013'}
+Watts Strogatz: {'Number of Nodes': 2600, 'Number of Edges': 5200, 'Average Degree': '4.000', 'Clustering Coefficient': '0.260', 'Betweenness Centrality': '0.0027', 'Modularity': '0.779', 'Assortativity': '-0.044', 'Jaccard Similarity': '0.131'}
+Powerlaw Cluster: {'Number of Nodes': 2600, 'Number of Edges': 12967, 'Average Degree': '9.975', 'Clustering Coefficient': '0.090', 'Betweenness Centrality': '0.0008', 'Modularity': '0.307', 'Assortativity': '-0.078', 'Jaccard Similarity': '0.012'}
 
 DATASET: Autophagy
-Loaded Graph: {'Number of Nodes': 298, 'Number of Edges': 2278, 'Average Degree': '15.289', 'Clustering Coefficient': '0.342', 'Betweenness Centrality': '0.0051', 'Modularity': '0.362', 'Assortativity': '0.033'}
-Erdos-Renyi: {'Number of Nodes': 298, 'Number of Edges': 2251, 'Average Degree': '15.107', 'Clustering Coefficient': '0.051', 'Betweenness Centrality': '0.0047', 'Modularity': '0.217', 'Assortativity': '0.019'}
-Barabasi-Albert: {'Number of Nodes': 298, 'Number of Edges': 1465, 'Average Degree': '9.832', 'Clustering Coefficient': '0.068', 'Betweenness Centrality': '0.0055', 'Modularity': '0.267', 'Assortativity': '-0.068'}
-Watts-Strogatz: {'Number of Nodes': 298, 'Number of Edges': 596, 'Average Degree': '4.000', 'Clustering Coefficient': '0.263', 'Betweenness Centrality': '0.0149', 'Modularity': '0.717', 'Assortativity': '-0.068'}
-Powerlaw Cluster: {'Number of Nodes': 298, 'Number of Edges': 1461, 'Average Degree': '9.805', 'Clustering Coefficient': '0.171', 'Betweenness Centrality': '0.0052', 'Modularity': '0.287', 'Assortativity': '-0.121'}
+Loaded Graph: {'Number of Nodes': 298, 'Number of Edges': 2278, 'Average Degree': '15.289', 'Clustering Coefficient': '0.342', 'Betweenness Centrality': '0.0051', 'Modularity': '0.362', 'Assortativity': '0.033', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 298, 'Number of Edges': 2268, 'Average Degree': '15.221', 'Clustering Coefficient': '0.053', 'Betweenness Centrality': '0.0047', 'Modularity': '0.215', 'Assortativity': '0.006', 'Jaccard Similarity': '0.039'}
+Barabasi Albert: {'Number of Nodes': 298, 'Number of Edges': 1465, 'Average Degree': '9.832', 'Clustering Coefficient': '0.093', 'Betweenness Centrality': '0.0054', 'Modularity': '0.267', 'Assortativity': '-0.081', 'Jaccard Similarity': '0.035'}
+Watts Strogatz: {'Number of Nodes': 298, 'Number of Edges': 596, 'Average Degree': '4.000', 'Clustering Coefficient': '0.276', 'Betweenness Centrality': '0.0147', 'Modularity': '0.723', 'Assortativity': '-0.084', 'Jaccard Similarity': '0.074'}
+Powerlaw Cluster: {'Number of Nodes': 298, 'Number of Edges': 1460, 'Average Degree': '9.799', 'Clustering Coefficient': '0.159', 'Betweenness Centrality': '0.0053', 'Modularity': '0.291', 'Assortativity': '-0.122', 'Jaccard Similarity': '0.035'}
 
 DATASET: Oxidative_Stress
-Loaded Graph: {'Number of Nodes': 326, 'Number of Edges': 3018, 'Average Degree': '18.515', 'Clustering Coefficient': '0.463', 'Betweenness Centrality': '0.0049', 'Modularity': '0.448', 'Assortativity': '0.034'}
-Erdos-Renyi: {'Number of Nodes': 326, 'Number of Edges': 2993, 'Average Degree': '18.362', 'Clustering Coefficient': '0.057', 'Betweenness Centrality': '0.0039', 'Modularity': '0.191', 'Assortativity': '-0.000'}
-Barabasi-Albert: {'Number of Nodes': 326, 'Number of Edges': 1605, 'Average Degree': '9.847', 'Clustering Coefficient': '0.094', 'Betweenness Centrality': '0.0050', 'Modularity': '0.269', 'Assortativity': '-0.067'}
-Watts-Strogatz: {'Number of Nodes': 326, 'Number of Edges': 652, 'Average Degree': '4.000', 'Clustering Coefficient': '0.297', 'Betweenness Centrality': '0.0153', 'Modularity': '0.761', 'Assortativity': '-0.020'}
-Powerlaw Cluster: {'Number of Nodes': 326, 'Number of Edges': 1603, 'Average Degree': '9.834', 'Clustering Coefficient': '0.154', 'Betweenness Centrality': '0.0050', 'Modularity': '0.296', 'Assortativity': '-0.107'}
+Loaded Graph: {'Number of Nodes': 326, 'Number of Edges': 3018, 'Average Degree': '18.515', 'Clustering Coefficient': '0.463', 'Betweenness Centrality': '0.0049', 'Modularity': '0.448', 'Assortativity': '0.034', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 326, 'Number of Edges': 3031, 'Average Degree': '18.595', 'Clustering Coefficient': '0.061', 'Betweenness Centrality': '0.0039', 'Modularity': '0.193', 'Assortativity': '0.003', 'Jaccard Similarity': '0.043'}
+Barabasi Albert: {'Number of Nodes': 326, 'Number of Edges': 1605, 'Average Degree': '9.847', 'Clustering Coefficient': '0.090', 'Betweenness Centrality': '0.0050', 'Modularity': '0.273', 'Assortativity': '-0.072', 'Jaccard Similarity': '0.044'}
+Watts Strogatz: {'Number of Nodes': 326, 'Number of Edges': 652, 'Average Degree': '4.000', 'Clustering Coefficient': '0.241', 'Betweenness Centrality': '0.0138', 'Modularity': '0.706', 'Assortativity': '-0.048', 'Jaccard Similarity': '0.153'}
+Powerlaw Cluster: {'Number of Nodes': 326, 'Number of Edges': 1603, 'Average Degree': '9.834', 'Clustering Coefficient': '0.160', 'Betweenness Centrality': '0.0049', 'Modularity': '0.284', 'Assortativity': '-0.110', 'Jaccard Similarity': '0.044'}
 
 DATASET: Myelination
-Loaded Graph: {'Number of Nodes': 190, 'Number of Edges': 368, 'Average Degree': '3.874', 'Clustering Coefficient': '0.219', 'Betweenness Centrality': '0.0050', 'Modularity': '0.421', 'Assortativity': '0.007'}
-Erdos-Renyi: {'Number of Nodes': 190, 'Number of Edges': 398, 'Average Degree': '4.189', 'Clustering Coefficient': '0.011', 'Betweenness Centrality': '0.0144', 'Modularity': '0.467', 'Assortativity': '-0.021'}
-Barabasi-Albert: {'Number of Nodes': 190, 'Number of Edges': 925, 'Average Degree': '9.737', 'Clustering Coefficient': '0.118', 'Betweenness Centrality': '0.0078', 'Modularity': '0.250', 'Assortativity': '-0.097'}
-Watts-Strogatz: {'Number of Nodes': 190, 'Number of Edges': 380, 'Average Degree': '4.000', 'Clustering Coefficient': '0.256', 'Betweenness Centrality': '0.0205', 'Modularity': '0.685', 'Assortativity': '-0.017'}
-Powerlaw Cluster: {'Number of Nodes': 190, 'Number of Edges': 918, 'Average Degree': '9.663', 'Clustering Coefficient': '0.195', 'Betweenness Centrality': '0.0075', 'Modularity': '0.266', 'Assortativity': '-0.162'}
+Loaded Graph: {'Number of Nodes': 190, 'Number of Edges': 368, 'Average Degree': '3.874', 'Clustering Coefficient': '0.219', 'Betweenness Centrality': '0.0050', 'Modularity': '0.421', 'Assortativity': '0.007', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 190, 'Number of Edges': 366, 'Average Degree': '3.853', 'Clustering Coefficient': '0.013', 'Betweenness Centrality': '0.0149', 'Modularity': '0.483', 'Assortativity': '-0.024', 'Jaccard Similarity': '0.011'}
+Barabasi Albert: {'Number of Nodes': 190, 'Number of Edges': 925, 'Average Degree': '9.737', 'Clustering Coefficient': '0.132', 'Betweenness Centrality': '0.0078', 'Modularity': '0.267', 'Assortativity': '-0.101', 'Jaccard Similarity': '0.017'}
+Watts Strogatz: {'Number of Nodes': 190, 'Number of Edges': 380, 'Average Degree': '4.000', 'Clustering Coefficient': '0.295', 'Betweenness Centrality': '0.0225', 'Modularity': '0.731', 'Assortativity': '-0.119', 'Jaccard Similarity': '0.042'}
+Powerlaw Cluster: {'Number of Nodes': 190, 'Number of Edges': 922, 'Average Degree': '9.705', 'Clustering Coefficient': '0.178', 'Betweenness Centrality': '0.0076', 'Modularity': '0.269', 'Assortativity': '-0.122', 'Jaccard Similarity': '0.016'}
 
 DATASET: Vasculature
-Loaded Graph: {'Number of Nodes': 738, 'Number of Edges': 10408, 'Average Degree': '28.206', 'Clustering Coefficient': '0.337', 'Betweenness Centrality': '0.0021', 'Modularity': '0.423', 'Assortativity': '-0.019'}
-Erdos-Renyi: {'Number of Nodes': 738, 'Number of Edges': 10345, 'Average Degree': '28.035', 'Clustering Coefficient': '0.038', 'Betweenness Centrality': '0.0018', 'Modularity': '0.152', 'Assortativity': '0.003'}
-Barabasi-Albert: {'Number of Nodes': 738, 'Number of Edges': 3665, 'Average Degree': '9.932', 'Clustering Coefficient': '0.053', 'Betweenness Centrality': '0.0025', 'Modularity': '0.273', 'Assortativity': '-0.070'}
-Watts-Strogatz: {'Number of Nodes': 738, 'Number of Edges': 1476, 'Average Degree': '4.000', 'Clustering Coefficient': '0.252', 'Betweenness Centrality': '0.0076', 'Modularity': '0.756', 'Assortativity': '-0.086'}
-Powerlaw Cluster: {'Number of Nodes': 738, 'Number of Edges': 3658, 'Average Degree': '9.913', 'Clustering Coefficient': '0.114', 'Betweenness Centrality': '0.0025', 'Modularity': '0.297', 'Assortativity': '-0.094'}
+Loaded Graph: {'Number of Nodes': 738, 'Number of Edges': 10408, 'Average Degree': '28.206', 'Clustering Coefficient': '0.337', 'Betweenness Centrality': '0.0021', 'Modularity': '0.423', 'Assortativity': '-0.019', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 738, 'Number of Edges': 10457, 'Average Degree': '28.339', 'Clustering Coefficient': '0.038', 'Betweenness Centrality': '0.0017', 'Modularity': '0.155', 'Assortativity': '0.002', 'Jaccard Similarity': '0.030'}
+Barabasi Albert: {'Number of Nodes': 738, 'Number of Edges': 3665, 'Average Degree': '9.932', 'Clustering Coefficient': '0.050', 'Betweenness Centrality': '0.0026', 'Modularity': '0.281', 'Assortativity': '-0.061', 'Jaccard Similarity': '0.029'}
+Watts Strogatz: {'Number of Nodes': 738, 'Number of Edges': 1476, 'Average Degree': '4.000', 'Clustering Coefficient': '0.277', 'Betweenness Centrality': '0.0075', 'Modularity': '0.753', 'Assortativity': '-0.034', 'Jaccard Similarity': '0.126'}
+Powerlaw Cluster: {'Number of Nodes': 738, 'Number of Edges': 3653, 'Average Degree': '9.900', 'Clustering Coefficient': '0.121', 'Betweenness Centrality': '0.0025', 'Modularity': '0.302', 'Assortativity': '-0.101', 'Jaccard Similarity': '0.033'}
 
 DATASET: RNA_Spliceosome
-Loaded Graph: {'Number of Nodes': 175, 'Number of Edges': 2483, 'Average Degree': '28.377', 'Clustering Coefficient': '0.509', 'Betweenness Centrality': '0.0055', 'Modularity': '0.217', 'Assortativity': '0.132'}
-Erdos-Renyi: {'Number of Nodes': 175, 'Number of Edges': 2542, 'Average Degree': '29.051', 'Clustering Coefficient': '0.165', 'Betweenness Centrality': '0.0049', 'Modularity': '0.130', 'Assortativity': '-0.015'}
-Barabasi-Albert: {'Number of Nodes': 175, 'Number of Edges': 850, 'Average Degree': '9.714', 'Clustering Coefficient': '0.138', 'Betweenness Centrality': '0.0083', 'Modularity': '0.272', 'Assortativity': '-0.110'}
-Watts-Strogatz: {'Number of Nodes': 175, 'Number of Edges': 350, 'Average Degree': '4.000', 'Clustering Coefficient': '0.295', 'Betweenness Centrality': '0.0220', 'Modularity': '0.696', 'Assortativity': '-0.035'}
-Powerlaw Cluster: {'Number of Nodes': 175, 'Number of Edges': 849, 'Average Degree': '9.703', 'Clustering Coefficient': '0.202', 'Betweenness Centrality': '0.0082', 'Modularity': '0.270', 'Assortativity': '-0.155'}
+Loaded Graph: {'Number of Nodes': 175, 'Number of Edges': 2483, 'Average Degree': '28.377', 'Clustering Coefficient': '0.509', 'Betweenness Centrality': '0.0055', 'Modularity': '0.217', 'Assortativity': '0.132', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 175, 'Number of Edges': 2508, 'Average Degree': '28.663', 'Clustering Coefficient': '0.166', 'Betweenness Centrality': '0.0049', 'Modularity': '0.140', 'Assortativity': '-0.030', 'Jaccard Similarity': '0.125'}
+Barabasi Albert: {'Number of Nodes': 175, 'Number of Edges': 850, 'Average Degree': '9.714', 'Clustering Coefficient': '0.126', 'Betweenness Centrality': '0.0083', 'Modularity': '0.250', 'Assortativity': '-0.097', 'Jaccard Similarity': '0.096'}
+Watts Strogatz: {'Number of Nodes': 175, 'Number of Edges': 350, 'Average Degree': '4.000', 'Clustering Coefficient': '0.271', 'Betweenness Centrality': '0.0222', 'Modularity': '0.691', 'Assortativity': '-0.030', 'Jaccard Similarity': '0.172'}
+Powerlaw Cluster: {'Number of Nodes': 175, 'Number of Edges': 849, 'Average Degree': '9.703', 'Clustering Coefficient': '0.185', 'Betweenness Centrality': '0.0082', 'Modularity': '0.284', 'Assortativity': '-0.122', 'Jaccard Similarity': '0.096'}
 
 DATASET: Mitochondrial_Metabolism
-Loaded Graph: {'Number of Nodes': 5182, 'Number of Edges': 106823, 'Average Degree': '41.228', 'Clustering Coefficient': '0.285', 'Betweenness Centrality': '0.0004', 'Modularity': '0.454', 'Assortativity': '-0.009'}
-Erdos-Renyi: {'Number of Nodes': 5182, 'Number of Edges': 106588, 'Average Degree': '41.138', 'Clustering Coefficient': '0.008', 'Betweenness Centrality': '0.0003', 'Modularity': '0.124', 'Assortativity': '-0.000'}
-Barabasi-Albert: {'Number of Nodes': 5182, 'Number of Edges': 25885, 'Average Degree': '9.990', 'Clustering Coefficient': '0.012', 'Betweenness Centrality': '0.0005', 'Modularity': '0.282', 'Assortativity': '-0.034'}
-Watts-Strogatz: {'Number of Nodes': 5182, 'Number of Edges': 10364, 'Average Degree': '4.000', 'Clustering Coefficient': '0.269', 'Betweenness Centrality': '0.0015', 'Modularity': '0.797', 'Assortativity': '-0.032'}
-Powerlaw Cluster: {'Number of Nodes': 5182, 'Number of Edges': 25870, 'Average Degree': '9.985', 'Clustering Coefficient': '0.080', 'Betweenness Centrality': '0.0005', 'Modularity': '0.303', 'Assortativity': '-0.060'}
+Loaded Graph: {'Number of Nodes': 5182, 'Number of Edges': 106823, 'Average Degree': '41.228', 'Clustering Coefficient': '0.285', 'Betweenness Centrality': '0.0004', 'Modularity': '0.454', 'Assortativity': '-0.009', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 5182, 'Number of Edges': 106186, 'Average Degree': '40.983', 'Clustering Coefficient': '0.008', 'Betweenness Centrality': '0.0003', 'Modularity': '0.123', 'Assortativity': '-0.001', 'Jaccard Similarity': '0.008'}
+Barabasi Albert: {'Number of Nodes': 5182, 'Number of Edges': 25885, 'Average Degree': '9.990', 'Clustering Coefficient': '0.012', 'Betweenness Centrality': '0.0005', 'Modularity': '0.280', 'Assortativity': '-0.031', 'Jaccard Similarity': '0.009'}
+Watts Strogatz: {'Number of Nodes': 5182, 'Number of Edges': 10364, 'Average Degree': '4.000', 'Clustering Coefficient': '0.261', 'Betweenness Centrality': '0.0015', 'Modularity': '0.791', 'Assortativity': '-0.043', 'Jaccard Similarity': '0.118'}
+Powerlaw Cluster: {'Number of Nodes': 5182, 'Number of Edges': 25872, 'Average Degree': '9.985', 'Clustering Coefficient': '0.078', 'Betweenness Centrality': '0.0005', 'Modularity': '0.305', 'Assortativity': '-0.061', 'Jaccard Similarity': '0.009'}
 
 DATASET: APP_Metabolism
-Loaded Graph: {'Number of Nodes': 141, 'Number of Edges': 340, 'Average Degree': '4.823', 'Clustering Coefficient': '0.259', 'Betweenness Centrality': '0.0092', 'Modularity': '0.490', 'Assortativity': '-0.079'}
-Erdos-Renyi: {'Number of Nodes': 141, 'Number of Edges': 365, 'Average Degree': '5.177', 'Clustering Coefficient': '0.029', 'Betweenness Centrality': '0.0151', 'Modularity': '0.403', 'Assortativity': '-0.025'}
-Barabasi-Albert: {'Number of Nodes': 141, 'Number of Edges': 680, 'Average Degree': '9.645', 'Clustering Coefficient': '0.133', 'Betweenness Centrality': '0.0098', 'Modularity': '0.261', 'Assortativity': '-0.079'}
-Watts-Strogatz: {'Number of Nodes': 141, 'Number of Edges': 282, 'Average Degree': '4.000', 'Clustering Coefficient': '0.265', 'Betweenness Centrality': '0.0250', 'Modularity': '0.669', 'Assortativity': '0.019'}
-Powerlaw Cluster: {'Number of Nodes': 141, 'Number of Edges': 675, 'Average Degree': '9.574', 'Clustering Coefficient': '0.224', 'Betweenness Centrality': '0.0095', 'Modularity': '0.273', 'Assortativity': '-0.164'}
+Loaded Graph: {'Number of Nodes': 141, 'Number of Edges': 340, 'Average Degree': '4.823', 'Clustering Coefficient': '0.259', 'Betweenness Centrality': '0.0092', 'Modularity': '0.490', 'Assortativity': '-0.079', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 141, 'Number of Edges': 302, 'Average Degree': '4.284', 'Clustering Coefficient': '0.015', 'Betweenness Centrality': '0.0178', 'Modularity': '0.449', 'Assortativity': '0.067', 'Jaccard Similarity': '0.035'}
+Barabasi Albert: {'Number of Nodes': 141, 'Number of Edges': 680, 'Average Degree': '9.645', 'Clustering Coefficient': '0.153', 'Betweenness Centrality': '0.0097', 'Modularity': '0.250', 'Assortativity': '-0.118', 'Jaccard Similarity': '0.037'}
+Watts Strogatz: {'Number of Nodes': 141, 'Number of Edges': 282, 'Average Degree': '4.000', 'Clustering Coefficient': '0.313', 'Betweenness Centrality': '0.0268', 'Modularity': '0.706', 'Assortativity': '-0.056', 'Jaccard Similarity': '0.068'}
+Powerlaw Cluster: {'Number of Nodes': 141, 'Number of Edges': 677, 'Average Degree': '9.603', 'Clustering Coefficient': '0.234', 'Betweenness Centrality': '0.0096', 'Modularity': '0.273', 'Assortativity': '-0.158', 'Jaccard Similarity': '0.031'}
 
 DATASET: Metal_Binding_and_Homeostasis
-Loaded Graph: {'Number of Nodes': 729, 'Number of Edges': 11142, 'Average Degree': '30.568', 'Clustering Coefficient': '0.329', 'Betweenness Centrality': '0.0022', 'Modularity': '0.386', 'Assortativity': '-0.053'}
-Erdos-Renyi: {'Number of Nodes': 729, 'Number of Edges': 11120, 'Average Degree': '30.508', 'Clustering Coefficient': '0.042', 'Betweenness Centrality': '0.0017', 'Modularity': '0.148', 'Assortativity': '0.009'}
-Barabasi-Albert: {'Number of Nodes': 729, 'Number of Edges': 3620, 'Average Degree': '9.931', 'Clustering Coefficient': '0.062', 'Betweenness Centrality': '0.0025', 'Modularity': '0.277', 'Assortativity': '-0.077'}
-Watts-Strogatz: {'Number of Nodes': 729, 'Number of Edges': 1458, 'Average Degree': '4.000', 'Clustering Coefficient': '0.277', 'Betweenness Centrality': '0.0077', 'Modularity': '0.762', 'Assortativity': '-0.043'}
-Powerlaw Cluster: {'Number of Nodes': 729, 'Number of Edges': 3614, 'Average Degree': '9.915', 'Clustering Coefficient': '0.122', 'Betweenness Centrality': '0.0025', 'Modularity': '0.303', 'Assortativity': '-0.082'}
+Loaded Graph: {'Number of Nodes': 729, 'Number of Edges': 11142, 'Average Degree': '30.568', 'Clustering Coefficient': '0.329', 'Betweenness Centrality': '0.0022', 'Modularity': '0.386', 'Assortativity': '-0.053', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 729, 'Number of Edges': 11022, 'Average Degree': '30.239', 'Clustering Coefficient': '0.041', 'Betweenness Centrality': '0.0017', 'Modularity': '0.145', 'Assortativity': '-0.011', 'Jaccard Similarity': '0.036'}
+Barabasi Albert: {'Number of Nodes': 729, 'Number of Edges': 3620, 'Average Degree': '9.931', 'Clustering Coefficient': '0.046', 'Betweenness Centrality': '0.0026', 'Modularity': '0.277', 'Assortativity': '-0.046', 'Jaccard Similarity': '0.034'}
+Watts Strogatz: {'Number of Nodes': 729, 'Number of Edges': 1458, 'Average Degree': '4.000', 'Clustering Coefficient': '0.261', 'Betweenness Centrality': '0.0074', 'Modularity': '0.748', 'Assortativity': '-0.073', 'Jaccard Similarity': '0.155'}
+Powerlaw Cluster: {'Number of Nodes': 729, 'Number of Edges': 3618, 'Average Degree': '9.926', 'Clustering Coefficient': '0.123', 'Betweenness Centrality': '0.0025', 'Modularity': '0.302', 'Assortativity': '-0.103', 'Jaccard Similarity': '0.031'}
 
 DATASET: Structural_Stabilization
-Loaded Graph: {'Number of Nodes': 3181, 'Number of Edges': 46479, 'Average Degree': '29.223', 'Clustering Coefficient': '0.282', 'Betweenness Centrality': '0.0006', 'Modularity': '0.480', 'Assortativity': '0.050'}
-Erdos-Renyi: {'Number of Nodes': 3181, 'Number of Edges': 46720, 'Average Degree': '29.374', 'Clustering Coefficient': '0.009', 'Betweenness Centrality': '0.0005', 'Modularity': '0.152', 'Assortativity': '0.001'}
-Barabasi-Albert: {'Number of Nodes': 3181, 'Number of Edges': 15880, 'Average Degree': '9.984', 'Clustering Coefficient': '0.017', 'Betweenness Centrality': '0.0007', 'Modularity': '0.281', 'Assortativity': '-0.042'}
-Watts-Strogatz: {'Number of Nodes': 3181, 'Number of Edges': 6362, 'Average Degree': '4.000', 'Clustering Coefficient': '0.274', 'Betweenness Centrality': '0.0023', 'Modularity': '0.792', 'Assortativity': '-0.045'}
-Powerlaw Cluster: {'Number of Nodes': 3181, 'Number of Edges': 15868, 'Average Degree': '9.977', 'Clustering Coefficient': '0.088', 'Betweenness Centrality': '0.0007', 'Modularity': '0.307', 'Assortativity': '-0.066'}
+Loaded Graph: {'Number of Nodes': 3181, 'Number of Edges': 46479, 'Average Degree': '29.223', 'Clustering Coefficient': '0.282', 'Betweenness Centrality': '0.0006', 'Modularity': '0.480', 'Assortativity': '0.050', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 3181, 'Number of Edges': 46572, 'Average Degree': '29.281', 'Clustering Coefficient': '0.009', 'Betweenness Centrality': '0.0006', 'Modularity': '0.150', 'Assortativity': '-0.006', 'Jaccard Similarity': '0.009'}
+Barabasi Albert: {'Number of Nodes': 3181, 'Number of Edges': 15880, 'Average Degree': '9.984', 'Clustering Coefficient': '0.017', 'Betweenness Centrality': '0.0007', 'Modularity': '0.285', 'Assortativity': '-0.035', 'Jaccard Similarity': '0.010'}
+Watts Strogatz: {'Number of Nodes': 3181, 'Number of Edges': 6362, 'Average Degree': '4.000', 'Clustering Coefficient': '0.266', 'Betweenness Centrality': '0.0023', 'Modularity': '0.785', 'Assortativity': '-0.028', 'Jaccard Similarity': '0.126'}
+Powerlaw Cluster: {'Number of Nodes': 3181, 'Number of Edges': 15869, 'Average Degree': '9.977', 'Clustering Coefficient': '0.082', 'Betweenness Centrality': '0.0007', 'Modularity': '0.305', 'Assortativity': '-0.064', 'Jaccard Similarity': '0.010'}
 
 DATASET: Lipid_Metabolism
-Loaded Graph: {'Number of Nodes': 1955, 'Number of Edges': 29980, 'Average Degree': '30.670', 'Clustering Coefficient': '0.297', 'Betweenness Centrality': '0.0009', 'Modularity': '0.386', 'Assortativity': '0.036'}
-Erdos-Renyi: {'Number of Nodes': 1955, 'Number of Edges': 30258, 'Average Degree': '30.954', 'Clustering Coefficient': '0.016', 'Betweenness Centrality': '0.0008', 'Modularity': '0.146', 'Assortativity': '-0.002'}
-Barabasi-Albert: {'Number of Nodes': 1955, 'Number of Edges': 9750, 'Average Degree': '9.974', 'Clustering Coefficient': '0.023', 'Betweenness Centrality': '0.0011', 'Modularity': '0.282', 'Assortativity': '-0.034'}
-Watts-Strogatz: {'Number of Nodes': 1955, 'Number of Edges': 3910, 'Average Degree': '4.000', 'Clustering Coefficient': '0.278', 'Betweenness Centrality': '0.0035', 'Modularity': '0.788', 'Assortativity': '-0.062'}
-Powerlaw Cluster: {'Number of Nodes': 1955, 'Number of Edges': 9739, 'Average Degree': '9.963', 'Clustering Coefficient': '0.095', 'Betweenness Centrality': '0.0011', 'Modularity': '0.304', 'Assortativity': '-0.080'}
+Loaded Graph: {'Number of Nodes': 1955, 'Number of Edges': 29980, 'Average Degree': '30.670', 'Clustering Coefficient': '0.297', 'Betweenness Centrality': '0.0009', 'Modularity': '0.386', 'Assortativity': '0.036', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 1955, 'Number of Edges': 29796, 'Average Degree': '30.482', 'Clustering Coefficient': '0.016', 'Betweenness Centrality': '0.0008', 'Modularity': '0.147', 'Assortativity': '0.004', 'Jaccard Similarity': '0.013'}
+Barabasi Albert: {'Number of Nodes': 1955, 'Number of Edges': 9750, 'Average Degree': '9.974', 'Clustering Coefficient': '0.025', 'Betweenness Centrality': '0.0011', 'Modularity': '0.278', 'Assortativity': '-0.045', 'Jaccard Similarity': '0.014'}
+Watts Strogatz: {'Number of Nodes': 1955, 'Number of Edges': 3910, 'Average Degree': '4.000', 'Clustering Coefficient': '0.279', 'Betweenness Centrality': '0.0036', 'Modularity': '0.791', 'Assortativity': '-0.078', 'Jaccard Similarity': '0.103'}
+Powerlaw Cluster: {'Number of Nodes': 1955, 'Number of Edges': 9746, 'Average Degree': '9.970', 'Clustering Coefficient': '0.092', 'Betweenness Centrality': '0.0011', 'Modularity': '0.305', 'Assortativity': '-0.074', 'Jaccard Similarity': '0.014'}
 
 DATASET: Epigenetic
-Loaded Graph: {'Number of Nodes': 271, 'Number of Edges': 3683, 'Average Degree': '27.181', 'Clustering Coefficient': '0.376', 'Betweenness Centrality': '0.0043', 'Modularity': '0.256', 'Assortativity': '-0.018'}
-Erdos-Renyi: {'Number of Nodes': 271, 'Number of Edges': 3618, 'Average Degree': '26.701', 'Clustering Coefficient': '0.095', 'Betweenness Centrality': '0.0036', 'Modularity': '0.148', 'Assortativity': '0.000'}
-Barabasi-Albert: {'Number of Nodes': 271, 'Number of Edges': 1330, 'Average Degree': '9.815', 'Clustering Coefficient': '0.092', 'Betweenness Centrality': '0.0059', 'Modularity': '0.267', 'Assortativity': '-0.058'}
-Watts-Strogatz: {'Number of Nodes': 271, 'Number of Edges': 542, 'Average Degree': '4.000', 'Clustering Coefficient': '0.286', 'Betweenness Centrality': '0.0166', 'Modularity': '0.729', 'Assortativity': '-0.035'}
-Powerlaw Cluster: {'Number of Nodes': 271, 'Number of Edges': 1323, 'Average Degree': '9.764', 'Clustering Coefficient': '0.180', 'Betweenness Centrality': '0.0057', 'Modularity': '0.284', 'Assortativity': '-0.140'}
+Loaded Graph: {'Number of Nodes': 271, 'Number of Edges': 3683, 'Average Degree': '27.181', 'Clustering Coefficient': '0.376', 'Betweenness Centrality': '0.0043', 'Modularity': '0.256', 'Assortativity': '-0.018', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 271, 'Number of Edges': 3670, 'Average Degree': '27.085', 'Clustering Coefficient': '0.099', 'Betweenness Centrality': '0.0036', 'Modularity': '0.146', 'Assortativity': '0.010', 'Jaccard Similarity': '0.071'}
+Barabasi Albert: {'Number of Nodes': 271, 'Number of Edges': 1330, 'Average Degree': '9.815', 'Clustering Coefficient': '0.092', 'Betweenness Centrality': '0.0059', 'Modularity': '0.267', 'Assortativity': '-0.075', 'Jaccard Similarity': '0.070'}
+Watts Strogatz: {'Number of Nodes': 271, 'Number of Edges': 542, 'Average Degree': '4.000', 'Clustering Coefficient': '0.247', 'Betweenness Centrality': '0.0160', 'Modularity': '0.705', 'Assortativity': '-0.045', 'Jaccard Similarity': '0.125'}
+Powerlaw Cluster: {'Number of Nodes': 271, 'Number of Edges': 1324, 'Average Degree': '9.771', 'Clustering Coefficient': '0.189', 'Betweenness Centrality': '0.0056', 'Modularity': '0.288', 'Assortativity': '-0.156', 'Jaccard Similarity': '0.070'}
 
 DATASET: Cell_Cycle
-Loaded Graph: {'Number of Nodes': 1457, 'Number of Edges': 17461, 'Average Degree': '23.968', 'Clustering Coefficient': '0.319', 'Betweenness Centrality': '0.0012', 'Modularity': '0.430', 'Assortativity': '-0.045'}
-Erdos-Renyi: {'Number of Nodes': 1457, 'Number of Edges': 17577, 'Average Degree': '24.128', 'Clustering Coefficient': '0.017', 'Betweenness Centrality': '0.0011', 'Modularity': '0.169', 'Assortativity': '-0.008'}
-Barabasi-Albert: {'Number of Nodes': 1457, 'Number of Edges': 7260, 'Average Degree': '9.966', 'Clustering Coefficient': '0.031', 'Betweenness Centrality': '0.0014', 'Modularity': '0.282', 'Assortativity': '-0.043'}
-Watts-Strogatz: {'Number of Nodes': 1457, 'Number of Edges': 2914, 'Average Degree': '4.000', 'Clustering Coefficient': '0.251', 'Betweenness Centrality': '0.0043', 'Modularity': '0.768', 'Assortativity': '-0.073'}
-Powerlaw Cluster: {'Number of Nodes': 1457, 'Number of Edges': 7251, 'Average Degree': '9.953', 'Clustering Coefficient': '0.102', 'Betweenness Centrality': '0.0014', 'Modularity': '0.301', 'Assortativity': '-0.086'}
+Loaded Graph: {'Number of Nodes': 1457, 'Number of Edges': 17461, 'Average Degree': '23.968', 'Clustering Coefficient': '0.319', 'Betweenness Centrality': '0.0012', 'Modularity': '0.430', 'Assortativity': '-0.045', 'Jaccard Similarity': '1.000'}
+Erdos Renyi: {'Number of Nodes': 1457, 'Number of Edges': 17475, 'Average Degree': '23.988', 'Clustering Coefficient': '0.016', 'Betweenness Centrality': '0.0011', 'Modularity': '0.169', 'Assortativity': '0.002', 'Jaccard Similarity': '0.014'}
+Barabasi Albert: {'Number of Nodes': 1457, 'Number of Edges': 7260, 'Average Degree': '9.966', 'Clustering Coefficient': '0.029', 'Betweenness Centrality': '0.0014', 'Modularity': '0.283', 'Assortativity': '-0.045', 'Jaccard Similarity': '0.014'}
+Watts Strogatz: {'Number of Nodes': 1457, 'Number of Edges': 2914, 'Average Degree': '4.000', 'Clustering Coefficient': '0.279', 'Betweenness Centrality': '0.0045', 'Modularity': '0.787', 'Assortativity': '-0.035', 'Jaccard Similarity': '0.107'}
+Powerlaw Cluster: {'Number of Nodes': 1457, 'Number of Edges': 7255, 'Average Degree': '9.959', 'Clustering Coefficient': '0.096', 'Betweenness Centrality': '0.0014', 'Modularity': '0.305', 'Assortativity': '-0.086', 'Jaccard Similarity': '0.015'}
