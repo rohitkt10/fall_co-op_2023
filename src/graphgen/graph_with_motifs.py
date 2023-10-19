@@ -64,14 +64,16 @@ class GraphWithMotifs:
         self.final_graph = None # final graph with motifs embedded
         self.graph_visualizer = None # GraphVisualizer object
 
-
-    def create_graph_with_motif_adjacency(self):
+    def create_graph_with_motif_adjacency(self, motif_adjacencies=None):
         """
         Create a large sparse graph using a specified base graph model and insert motifs by replacing
         a specified number of nodes with a specified graph model.
 
+        Args:
+        - motif_adjacencies (list): List of motif adjacency matrices.
         Returns:
         - np.ndarray or None: The resulting adjacency matrix of the modified graph, or None if invalid parameters.
+        - list: List of motifs.
         """
         if self.log:  # Check if logging is enabled
             logging.info(f"base_graph_model= {self.base_graph_model}, motif_graph_model= {self.motif_graph_model}")
@@ -104,13 +106,22 @@ class GraphWithMotifs:
 
         # nodes available to create subgraphs: for the first motif, all nodes are available
         nodes_available = list(np.arange(base_adjacency.shape[0]))
+        # list of motifs
+        motifs = []
 
         for motif_i in range(num_motifs):
             # Generate a random motif size within the specified range
             motif_size = random.randint(self.min_motif_size, self.max_motif_size)
 
+            # if unique motifs required
+            if motif_adjacencies is not None:  
+                # pick random motif from the list of motifs
+                motif_adjacency = random.choice(motif_adjacencies)
+                motif_size = motif_adjacency.shape[0]
+
             # Select nodes to replace
             nodes_to_replace = np.random.choice(nodes_available, size=(motif_size,), replace=False)
+            motifs.append(list(nodes_to_replace))
             # if motif overlapping not allowed
             if not self.motif_overlap:    
                 nodes_available = [node for node in nodes_available if node not in nodes_to_replace]
@@ -129,7 +140,9 @@ class GraphWithMotifs:
 
             # Create the motif model adjacency matrix
             if motif_size >= self.m:
-                motif_adjacency = nx.to_numpy_array(self.create_graph_model(self.motif_graph_model, motif_size))
+                # if unique motifs not required
+                if motif_adjacency is None:
+                    motif_adjacency = nx.to_numpy_array(self.create_graph_model(self.motif_graph_model, motif_size))
 
                 # replace edge weights
                 motif_adjacency = self.replace_edge_weights(motif_adjacency, self.min_motif_edge_weight, self.max_motif_edge_weight)
@@ -183,7 +196,7 @@ class GraphWithMotifs:
 
         # return updated adjacency matrix
         base_adjacency = nx.to_numpy_array(self.final_graph)
-        return base_adjacency
+        return base_adjacency, motifs
 
 
     def create_graph_model(self, graph_model, n):
