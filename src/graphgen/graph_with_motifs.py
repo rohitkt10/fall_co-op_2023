@@ -20,6 +20,7 @@ class GraphWithMotifs:
                  motif_overlap=False,
                  min_base_edge_weight=1.0, max_base_edge_weight=1.0,
                  min_motif_edge_weight=1.0, max_motif_edge_weight=1.0,
+                 node_feat_dim=10,
                  plot=False,
                  log=True):
         """
@@ -40,6 +41,7 @@ class GraphWithMotifs:
         - max_base_edge_weight (float): Maximum edge weight for edges in the base graph.
         - min_motif_edge_weight (float): Minimum edge weight for edges in the motif graph.
         - max_motif_edge_weight (float): Maximum edge weight for edges in the motif graph.
+        - node_feat_dim (int): Dimension of the node features (default is 10).
         - plot (bool): Whether to plot the graphs (default is False).
         - log (bool): Whether to log variable values for debugging (default is True).
         """
@@ -58,6 +60,8 @@ class GraphWithMotifs:
         self.max_base_edge_weight = max_base_edge_weight
         self.min_motif_edge_weight = min_motif_edge_weight
         self.max_motif_edge_weight = max_motif_edge_weight
+        self.node_feat_dim = node_feat_dim
+        self.node_features = None  # a dictionary mapping node ID to its one-hot encoded feature
         self.plot = plot
         self.log = log
         self.base_graph = None  # base graph created as per the specified model
@@ -194,9 +198,12 @@ class GraphWithMotifs:
             plt.tight_layout()
             plt.show()
 
+        # Assign a random one-hot encoded feature to each node in the base graph
+        self.assign_node_features()
+
         # return updated adjacency matrix
         base_adjacency = nx.to_numpy_array(self.final_graph)
-        return base_adjacency, motifs
+        return base_adjacency, motifs, self.node_features
 
 
     def create_graph_model(self, graph_model, n):
@@ -250,6 +257,18 @@ class GraphWithMotifs:
             sample_connections = np.random.choice(nonzero_degree_nodes, size=(sample_degree,), replace=False)
             for node2 in sample_connections: 
                 self.final_graph.add_edge(node1, node2)
+
+    def assign_node_features(self):
+        """
+        Assign random one-hot encoded features of dimension `node_feat_dim` to nodes of the base graph.
+        """
+        self.node_features = {}
+        for node in self.final_graph.nodes():
+            one_hot_feature = np.zeros(self.node_feat_dim, dtype=int)
+            atom_type = np.random.randint(0, self.node_feat_dim)
+            one_hot_feature[atom_type] = 1
+            self.node_features[node] = list(one_hot_feature)
+
 
     def plot_final_graph_with_motifs(self, edge_colors, node_colors, num_motifs, ax):
         """
