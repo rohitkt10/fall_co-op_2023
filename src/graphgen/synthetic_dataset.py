@@ -24,22 +24,26 @@ class GraphWithMotifsDataset:
 
     def generate_dataset(self):
         """
-        Generate the dataset with equal positive and negative samples.
+        Generate the dataset of graphs with motifs.
+
+        Returns:
+        - dataset (list): List of tuples containing the graph adjacency matrix, the motifs, and the class label.
         """
 
         # Generate unique motifs
-        motif_adjacencies = []
         classes = 2
+        motif_adjacencies = []
         for _ in range(classes):
             # Generate a random motif size within the specified range
             motif_size = random.randint(self.min_motif_size, self.max_motif_size)
             motif_adjacencies.append(nx.to_numpy_array(self.graph_with_motifs.create_graph_model(self.motif_graph_model, motif_size)))
 
-        for i in range(self.num_graphs):  # half positive, half negative
+        # Generate samples for each class
+        for i in range(self.num_graphs):
             # Create a graph with a positive motif
             label = random.choice(range(classes))
-            graph_adj, motifs = self.graph_with_motifs.create_graph_with_motif_adjacency([motif_adjacencies[label]])
-            self.dataset.append((graph_adj, motifs, label))
+            graph_adj, motifs, node_features = self.graph_with_motifs.create_graph_with_motif_adjacency([motif_adjacencies[label]])
+            self.dataset.append((graph_adj, motifs, node_features, label))
 
     def get_dataset(self):
         return self.dataset
