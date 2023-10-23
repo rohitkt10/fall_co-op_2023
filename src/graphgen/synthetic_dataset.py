@@ -1,6 +1,7 @@
 from .graph_with_motifs import GraphWithMotifs
 
 import random
+import pickle
 import networkx as nx
 
 class GraphWithMotifsDataset:
@@ -47,3 +48,12 @@ class GraphWithMotifsDataset:
 
     def get_dataset(self):
         return self.dataset
+    
+    def save_dataset(self, dataset_name):
+        """
+        Save the dataset to a file.
+        """
+        with open(f'{dataset_name}.pkl', 'wb') as f:
+            pickle.dump(self.dataset, f)
+
+
