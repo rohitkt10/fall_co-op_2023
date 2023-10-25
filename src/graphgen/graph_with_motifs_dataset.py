@@ -5,7 +5,7 @@ import pickle
 import networkx as nx
 
 class GraphWithMotifsDataset:
-    def __init__(self, num_graphs=10, min_nodes=80, max_nodes=100, **kwargs):
+    def __init__(self, num_graphs=100, min_nodes=80, max_nodes=100, **kwargs):
         """
         Args:
         - num_graphs (int): Number of graphs in the dataset.
@@ -32,6 +32,8 @@ class GraphWithMotifsDataset:
         """
 
         # Generate unique motifs
+        # TODO: Embed different number of motifs in graph 
+        # a) non-overlapping classes b) overlapping (class decided based on probability)
         classes = 2
         motif_adjacencies = []
         for _ in range(classes):
@@ -40,7 +42,7 @@ class GraphWithMotifsDataset:
             motif_adjacencies.append(nx.to_numpy_array(self.graph_with_motifs.create_graph_model(self.motif_graph_model, motif_size)))
 
         # Generate samples for each class
-        for i in range(self.num_graphs):
+        for _ in range(self.num_graphs):
             # Create a graph with a positive motif
             label = random.choice(range(classes))
             graph_adj, motifs, node_features = self.graph_with_motifs.create_graph_with_motif_adjacency([motif_adjacencies[label]])

@@ -2,7 +2,7 @@ import torch
 from torch_geometric.data import Dataset, Data
 import pickle
 
-class SyntheticGraphDataset(Dataset):
+class SyntheticGraphDatasetPyG(Dataset):
     """
     A dataset for synthetic graphs.
     """
