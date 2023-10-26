@@ -61,20 +61,21 @@ class GraphWithMotifs:
         self.min_motif_edge_weight = min_motif_edge_weight
         self.max_motif_edge_weight = max_motif_edge_weight
         self.node_feat_dim = node_feat_dim
-        self.node_features = None  # a dictionary mapping node ID to its one-hot encoded feature
+        self.node_features = {}  # a dictionary mapping node ID to its one-hot encoded feature
+        self.motif_nodes = []  # list of motif nodes
         self.plot = plot
         self.log = log
         self.base_graph = None  # base graph created as per the specified model
         self.final_graph = None # final graph with motifs embedded
         self.graph_visualizer = None # GraphVisualizer object
 
-    def create_graph_with_motif_adjacency(self, motif_adjacencies=None):
+    def create_graph_with_motif_adjacency(self, motifs_list=None):
         """
         Create a large sparse graph using a specified base graph model and insert motifs by replacing
         a specified number of nodes with a specified graph model.
 
         Args:
-        - motif_adjacencies (list): List of motif adjacency matrices.
+        - motifs_list (list): List of motifs {'adj_matrix': ..., 'node_features': ..., 'class_label': ...}.
         Returns:
         - np.ndarray or None: The resulting adjacency matrix of the modified graph, or None if invalid parameters.
         - list: List of motifs.
@@ -118,9 +119,10 @@ class GraphWithMotifs:
             motif_size = random.randint(self.min_motif_size, self.max_motif_size)
 
             # if unique motifs required
-            if motif_adjacencies is not None:  
+            if motifs_list is not None:  
                 # pick random motif from the list of motifs
-                motif_adjacency = random.choice(motif_adjacencies)
+                picked_motif = random.choice(motifs_list)
+                motif_adjacency = picked_motif['adj_matrix']
                 motif_size = motif_adjacency.shape[0]
 
             # Select nodes to replace
@@ -167,6 +169,11 @@ class GraphWithMotifs:
             # Replace selected nodes in base graph adjacency matrix with motif model
             for i, idx in enumerate(nodes_to_replace):
                 base_adjacency[idx, nodes_to_replace] = motif_adjacency[i]
+                # update motif node features
+                if picked_motif is not None:
+                    self.node_features[idx] = picked_motif['node_features'][i]
+                else:
+                    self.node_features[idx] = self.assign_node_feature()
 
         # Ensure that none of the nodes have degree 0 in the original base graph
         if np.sum(base_adjacency.sum(axis=1) == 0) > 0:
@@ -199,7 +206,10 @@ class GraphWithMotifs:
             plt.show()
 
         # Assign a random one-hot encoded feature to each node in the base graph
-        self.assign_node_features()
+        self.assign_nonmotif_node_features()
+
+        # list of motif nodes
+        self.motif_nodes = [node for motif in motifs for node in motifs]
 
         # return updated adjacency matrix
         base_adjacency = nx.to_numpy_array(self.final_graph)
@@ -223,6 +233,7 @@ class GraphWithMotifs:
     def replace_edge_weights(self, adjacency_matrix, min_edge_weight, max_edge_weight):
         """
         Replace edge weights in the graph adjacency matrix with random values between the specified range.
+        TODO: make edge weights a vector of size `num_edge_features`
         """
         if min_edge_weight != max_edge_weight:
             assert min_edge_weight < max_edge_weight
@@ -258,17 +269,22 @@ class GraphWithMotifs:
             for node2 in sample_connections: 
                 self.final_graph.add_edge(node1, node2)
 
-    def assign_node_features(self):
+    def assign_node_feature(self):
+        """
+        Randomly generate a one-hot encoded feature of dimension `node_feat_dim` for a node.
+        """
+        one_hot_feature = np.zeros(self.node_feat_dim, dtype=int)
+        atom_type = np.random.randint(0, self.node_feat_dim)
+        one_hot_feature[atom_type] = 1
+        return list(one_hot_feature)
+
+    def assign_nonmotif_node_features(self):
         """
         Assign random one-hot encoded features of dimension `node_feat_dim` to nodes of the base graph.
         """
-        self.node_features = {}
         for node in self.final_graph.nodes():
-            one_hot_feature = np.zeros(self.node_feat_dim, dtype=int)
-            atom_type = np.random.randint(0, self.node_feat_dim)
-            one_hot_feature[atom_type] = 1
-            self.node_features[node] = list(one_hot_feature)
-
+            if node not in self.motif_nodes:
+                self.node_features[node] = self.assign_node_feature()
 
     def plot_final_graph_with_motifs(self, edge_colors, node_colors, num_motifs, ax):
         """
