@@ -4,6 +4,8 @@ import random
 import pickle
 import numpy as np
 import networkx as nx
+import time
+import os
 
 class GraphWithMotifsDataset:
     def __init__(self, num_graphs=100, min_nodes=80, max_nodes=100, **kwargs):
@@ -17,12 +19,10 @@ class GraphWithMotifsDataset:
         self.num_graphs = num_graphs
         self.kwargs = kwargs
         self.dataset = []
-        n = random.randint(min_nodes, max_nodes)
-        self.graph_with_motifs = GraphWithMotifs(n=n, **kwargs)
-        self.motif_graph_model = kwargs.get('motif_graph_model', 'ER')
-        self.min_motif_size = kwargs.get('min_motif_size', 10)
-        self.max_motif_size = kwargs.get('max_motif_size', 30)
-        self.max_num_motifs = kwargs.get('max_num_motifs', 5)
+        self.kwargs = kwargs
+        self.min_nodes = min_nodes
+        self.max_nodes = max_nodes
+
 
     def generate_dataset(self):
         """
@@ -38,24 +38,32 @@ class GraphWithMotifsDataset:
         classes = 2
         motifs_dict = {}
         for i in range(classes):
+            n = random.randint(self.min_nodes, self.max_nodes)
+            graph_with_motifs = GraphWithMotifs(n=n, **self.kwargs)
+            motif_graph_model = self.kwargs.get('motif_graph_model', 'ER')
+            min_motif_size = self.kwargs.get('min_motif_size', 10)
+            max_motif_size = self.kwargs.get('max_motif_size', 30)
+
             # Generate a random motif size within the specified range
-            motif_size = random.randint(self.min_motif_size, self.max_motif_size)
-            motif_adj = nx.to_numpy_array(self.graph_with_motifs.create_graph_model(self.motif_graph_model, motif_size))
+            motif_size = random.randint(min_motif_size, max_motif_size)
+            motif_adj = nx.to_numpy_array(graph_with_motifs.create_graph_model(motif_graph_model, motif_size))
             motif_features = []
             # Get the indices of the non-zero elements in the matrix
             row_indices, col_indices = np.where(motif_adj != 0)
             # Combine the row and column indices to get a list of nodes
             motif_nodes = list(set(row_indices) | set(col_indices))
             for _ in motif_nodes:
-                motif_features.append(self.graph_with_motifs.assign_node_feature())
+                motif_features.append(graph_with_motifs.assign_node_feature())
             motifs_dict[f'motif_{i}'] = {'name': f'motif_{i}', 'adj_matrix': motif_adj, 'node_features': motif_features, 'class_label': i}
             
-
         # Generate samples for each class
         for _ in range(self.num_graphs):
-            # Create a graph with a positive motif
+            n = random.randint(self.min_nodes, self.max_nodes)
+            # creating obj here so as to have random graph generation for each sample
+            graph_with_motifs = GraphWithMotifs(n=n, **self.kwargs)
+            # Create a graph with a motif
             motif_name = random.choice(list(motifs_dict.keys()))
-            graph_adj, motifs, node_features = self.graph_with_motifs.create_graph_with_motif_adjacency([motifs_dict[motif_name]])
+            graph_adj, motifs, node_features = graph_with_motifs.create_graph_with_motif_adjacency([motifs_dict[motif_name]])
             self.dataset.append((graph_adj, motifs, node_features, motifs_dict[motif_name]['class_label']))
 
     def get_dataset(self):
