@@ -205,15 +205,16 @@ class GraphWithMotifs:
             plt.tight_layout()
             plt.show()
 
+        # list of motif nodes
+        self.motif_nodes = [node for motif in motifs for node in motif]
+
         # Assign a random one-hot encoded feature to each node in the base graph
         self.assign_nonmotif_node_features()
 
-        # list of motif nodes
-        self.motif_nodes = [node for motif in motifs for node in motifs]
-
         # return updated adjacency matrix
         base_adjacency = nx.to_numpy_array(self.final_graph)
-        return base_adjacency, motifs, self.node_features
+        # sort dictionary based on keys
+        return base_adjacency, motifs, dict(sorted(self.node_features.items()))
 
 
     def create_graph_model(self, graph_model, n):
