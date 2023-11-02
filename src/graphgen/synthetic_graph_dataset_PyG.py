@@ -28,5 +28,5 @@ class SyntheticGraphDatasetPyG(Dataset):
         edge_index = torch.tensor(graph_adj.nonzero(), dtype=torch.long)
         x = torch.tensor(list(node_features.values()), dtype=torch.float)
         y = torch.tensor([label], dtype=torch.long)
-        data = Data(x=x, edge_index=edge_index, y=y)
+        data = Data(x=x, edge_index=edge_index, y=y, motifs=motifs)
         return data
