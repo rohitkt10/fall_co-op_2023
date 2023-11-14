@@ -35,3 +35,4 @@ wandb/
 # log files
 *.log
 *.json
+*.csv

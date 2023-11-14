@@ -8,7 +8,7 @@ class GraphConvResidualNet(nn.Module):
     """
     A 4-layer graph convolutional network with residual connections.
     """
-    def __init__(self, dim, num_features, num_classes, conv_type=GraphConv, dropout=0.5):
+    def __init__(self, dim, num_features, num_classes, num_layers=4, conv_type=GraphConv, dropout=0.5):
         super().__init__()
 
         self.num_features = num_features
@@ -16,6 +16,16 @@ class GraphConvResidualNet(nn.Module):
         self.dim = dim
         self.conv_type = conv_type
         self.dropout = dropout
+        self.num_layers = num_layers
+
+        # Create convolution layers dynamically based on the number of layers
+        self.conv_layers = nn.ModuleList([
+            self.conv_type(num_features, dim) if i == 0 else self.conv_type(dim, dim)
+            for i in range(num_layers)
+        ])
+
+        # Create batch normalization layers
+        self.bn_layers = nn.ModuleList([nn.BatchNorm1d(dim) for _ in range(num_layers)])
 
         if conv_type == ChebConv:
             self.conv1 = self.conv_type(num_features, dim, K=2) # try K=3,
@@ -42,35 +52,16 @@ class GraphConvResidualNet(nn.Module):
         self.lin2 = nn.Linear(dim, self.num_classes)
 
     def forward(self, x, edge_index, batch, edge_weight=None):
-        # Apply the first convolution layer
-        x1 = self.conv1(x, edge_index, edge_weight)
-        x1 = self.bn1(x1)
-        x1 = x1.relu()
-        x1 = F.dropout(x1, p=self.dropout, training=self.training)
 
-        # Apply the second convolution layer with residual connection
-        x2 = self.conv2(x1, edge_index, edge_weight)
-        x2 = self.bn2(x2)
-        x2 = x2.relu()
-        x2 = x2 + x1  # Residual connection
-        x2 = F.dropout(x2, p=self.dropout, training=self.training)
-
-        # Apply the third convolution layer with residual connection
-        x3 = self.conv3(x2, edge_index, edge_weight)
-        x3 = self.bn3(x3)
-        x3 = x3.relu()
-        x3 = x3 + x2  # Residual connection
-        x3 = F.dropout(x3, p=self.dropout, training=self.training)
-
-        # Apply the fourth convolution layer with residual connection
-        x4 = self.conv4(x3, edge_index, edge_weight)
-        x4 = self.bn4(x4)
-        x4 = x4.relu()
-        x4 = x4 + x3  # Residual connection
-        x4 = F.dropout(x4, p=self.dropout, training=self.training)
+        # Apply the convolution layers with residual connections
+        for i in range(self.num_layers):
+            x = self.conv_layers[i](x, edge_index, edge_weight)
+            x = self.bn_layers[i](x)
+            x = x.relu()
+            x = F.dropout(x, p=self.dropout, training=self.training)
 
         # Readout layer
-        x = global_add_pool(x4, batch)
+        x = global_add_pool(x, batch)
         x = self.lin1(x).relu()
         x = F.dropout(x, p=self.dropout, training=self.training)
 

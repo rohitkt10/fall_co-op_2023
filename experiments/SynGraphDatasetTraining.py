@@ -27,6 +27,18 @@ num_test = num_samples - num_train - num_val
 
 train_dataset, val_dataset, test_dataset = random_split(dataset, [num_train, num_val, num_test])
 
+saved_dir = 'syndata_exp1/'
+
+# save dataset
+torch.save(train_dataset, f'{saved_dir}/train_dataset.pt')
+torch.save(val_dataset, f'{saved_dir}/val_dataset.pt')
+torch.save(test_dataset, f'{saved_dir}/test_dataset.pt')
+
+#load dataset
+# train_dataset = torch.load(f'{saved_dir}/train_dataset.pt')
+# val_dataset = torch.load(f'{saved_dir}/val_dataset.pt')
+# test_dataset = torch.load(f'{saved_dir}/test_dataset.pt')
+
 # Create data loaders for training and testing
 train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=64)
@@ -40,129 +52,132 @@ for i in train_dataset, val_dataset, test_dataset:
     print(Counter(labels))
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-print(device)
+print(f'device: {device}')
 
 # Define hyperparameters to iterate over
+num_layers = [2, 4]
 conv_types = [GraphConv, GCNConv, ChebConv]
-dropouts = [0.1, 0.4, 0.5, 0.6, 0.8]
+dropouts = [0, 0.1, 0.4, 0.5, 0.6, 0.8]
 l2_values = [0.00001, 0.0001, 0.001, 0.01, 0.1]
 epochs = 2
 
 # Initialize dictionary to store results
-results = {"conv_type": [], "dropout": [], "l2": [], "best_model_epoch": [], "train_loss": [], "train_acc": [], "val_loss": [], "val_acc": [], "test_acc": []}
+results = {"num_layers": [], "conv_type": [], "dropout": [], "l2": [], "best_model_epoch": [], "train_loss": [], "train_acc": [], "val_loss": [], "val_acc": [], "test_acc": []}
 
 best_model_name = ''
 
 # Iterate over hyperparameters and train model
-for conv_type in conv_types:
-    for dropout in dropouts:
-        for l2 in l2_values:
-            print(f"Training model with {conv_type.__name__} convolution, dropout={dropout}, and l2={l2}")
+for n_layer in num_layers:
+    for conv_type in conv_types:
+        for dropout in dropouts:
+            for l2 in l2_values:
+                print(f"Training model with {n_layer} {conv_type.__name__} convolution, dropout={dropout}, and l2={l2}")
 
-            # Initialize model with current hyperparameters
-            model = GraphConvResidualNet(dim=32, 
-                                         num_features=dataset.num_features, 
-                                         num_classes=dataset.num_classes, 
-                                         conv_type=conv_type, 
-                                         dropout=dropout).to(device)
+                # Initialize model with current hyperparameters
+                model = GraphConvResidualNet(dim=32, 
+                                            num_features=dataset.num_features, 
+                                            num_classes=dataset.num_classes, 
+                                            num_layers=n_layer,
+                                            conv_type=conv_type, 
+                                            dropout=dropout).to(device)
 
-            # Initialize optimizer and criterion
-            optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=l2)
-            criterion = torch.nn.NLLLoss()
+                # Initialize optimizer and criterion
+                optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=l2)
+                criterion = torch.nn.NLLLoss()
 
-            # Training loop with validation and model checkpointing
-            best_val_accuracy = 0
+                # Training loop with validation and model checkpointing
+                best_val_accuracy = 0
 
-            # Initialize metrics dictionary for current hyperparameters
-            metrics = {"train_loss": [], "train_acc": [], "val_loss": [], "val_acc": []}
+                # Initialize metrics dictionary for current hyperparameters
+                metrics = {"train_loss": [], "train_acc": [], "val_loss": [], "val_acc": []}
 
-            # Train model for specified number of epochs
-            for epoch in tqdm(range(1, epochs + 1)):
-                model.train()
-                train_loss = 0
-                train_correct = 0
+                # Train model for specified number of epochs
+                for epoch in tqdm(range(1, epochs + 1)):
+                    model.train()
+                    train_loss = 0
+                    train_correct = 0
 
-                if epoch == 51:
-                    for param_group in optimizer.param_groups:
-                        param_group['lr'] = 0.5 * param_group['lr']
+                    if epoch == 51:
+                        for param_group in optimizer.param_groups:
+                            param_group['lr'] = 0.5 * param_group['lr']
 
-                for data in train_loader:
-                    data = data.to(device)
-                    optimizer.zero_grad()
-                    output = model(data.x, data.edge_index, data.batch)
-                    loss = criterion(output, data.y)
-                    loss.backward()
-                    optimizer.step()
-                    train_loss += loss.item()
-                    pred = output.argmax(dim=1)
-                    train_correct += pred.eq(data.y).sum().item()
+                    for data in train_loader:
+                        data = data.to(device)
+                        optimizer.zero_grad()
+                        output = model(data.x, data.edge_index, data.batch)
+                        loss = criterion(output, data.y)
+                        loss.backward()
+                        optimizer.step()
+                        train_loss += loss.item()
+                        pred = output.argmax(dim=1)
+                        train_correct += pred.eq(data.y).sum().item()
 
-                train_loss /= len(train_loader)
-                train_accuracy = train_correct / len(train_dataset)
+                    train_loss /= len(train_loader)
+                    train_accuracy = train_correct / len(train_dataset)
 
-                model.eval()
-                val_loss = 0
-                val_correct = 0
-                for data in val_loader:
-                    data = data.to(device)
-                    output = model(data.x, data.edge_index, data.batch)
-                    loss = criterion(output, data.y)
-                    val_loss += loss.item()
-                    pred = output.argmax(dim=1)
-                    val_correct += pred.eq(data.y).sum().item()
+                    model.eval()
+                    val_loss = 0
+                    val_correct = 0
+                    for data in val_loader:
+                        data = data.to(device)
+                        output = model(data.x, data.edge_index, data.batch)
+                        loss = criterion(output, data.y)
+                        val_loss += loss.item()
+                        pred = output.argmax(dim=1)
+                        val_correct += pred.eq(data.y).sum().item()
 
-                val_loss /= len(val_loader)
-                val_accuracy = val_correct / len(val_dataset)
+                    val_loss /= len(val_loader)
+                    val_accuracy = val_correct / len(val_dataset)
 
-                if val_accuracy > best_val_accuracy:
-                    best_val_accuracy = val_accuracy
-                    # Save the best model
-                    best_model_name = f'graphgen_model_{conv_type.__name__}_{dropout}_{l2}.pt'
-                    best_model_epoch = epoch
-                    torch.save(model.state_dict(), best_model_name)
+                    if val_accuracy > best_val_accuracy:
+                        best_val_accuracy = val_accuracy
+                        # Save the best model
+                        best_model_name = f'{saved_dir}/graphgen_model_{n_layer}{conv_type.__name__}_{dropout}_{l2}.pt'
+                        best_model_epoch = epoch
+                        torch.save(model.state_dict(), best_model_name)
 
-                # Store metrics for current epoch
-                metrics["train_loss"].append(train_loss)
-                metrics["train_acc"].append(train_accuracy)
-                metrics["val_loss"].append(val_loss)
-                metrics["val_acc"].append(val_accuracy)
+                    # Store metrics for current epoch
+                    metrics["train_loss"].append(train_loss)
+                    metrics["train_acc"].append(train_accuracy)
+                    metrics["val_loss"].append(val_loss)
+                    metrics["val_acc"].append(val_accuracy)
 
-            # save metrics to csv
-            metrics_df = pd.DataFrame(metrics)
-            metrics_df.to_csv(f'graphgen_metrics_{conv_type.__name__}_{dropout}_{l2}.csv', index=False)
+                # save metrics to csv
+                metrics_df = pd.DataFrame(metrics)
+                metrics_df.to_csv(f'{saved_dir}/graphgen_metrics_{n_layer}{conv_type.__name__}_{dropout}_{l2}.csv', index=False)
 
-            # Store results for current hyperparameters
-            results["conv_type"].append(conv_type.__name__)
-            results["dropout"].append(dropout)
-            results["l2"].append(l2)
-            results["best_model_epoch"].append(best_model_epoch)
-            results["train_loss"].append(metrics["train_loss"][-1])
-            results["train_acc"].append(metrics["train_acc"][-1])
-            results["val_loss"].append(metrics["val_loss"][-1])
-            results["val_acc"].append(metrics["val_acc"][-1])
+                # Store results for current hyperparameters
+                results["conv_type"].append(conv_type.__name__)
+                results["dropout"].append(dropout)
+                results["l2"].append(l2)
+                results["best_model_epoch"].append(best_model_epoch)
+                results["train_loss"].append(metrics["train_loss"][-1])
+                results["train_acc"].append(metrics["train_acc"][-1])
+                results["val_loss"].append(metrics["val_loss"][-1])
+                results["val_acc"].append(metrics["val_acc"][-1])
 
-            # Load the best model for evaluation
-            model.load_state_dict(torch.load(best_model_name))
+                # Load the best model for evaluation
+                model.load_state_dict(torch.load(best_model_name))
 
-            # ... (Use the model for evaluation)
-            def test(loader):
-                model.eval()
-                correct = 0
-                for data in loader:
-                    data = data.to(device)
-                    output = model(data.x, data.edge_index, data.batch)
-                    pred = output.max(dim=1)[1]
-                    correct += pred.eq(data.y).sum().item()
-                return correct / len(loader.dataset)
+                # ... (Use the model for evaluation)
+                def test(loader):
+                    model.eval()
+                    correct = 0
+                    for data in loader:
+                        data = data.to(device)
+                        output = model(data.x, data.edge_index, data.batch)
+                        pred = output.max(dim=1)[1]
+                        correct += pred.eq(data.y).sum().item()
+                    return correct / len(loader.dataset)
 
-            test_acc = test(test_loader)
-            results["test_acc"].append(test_acc)
+                test_acc = test(test_loader)
+                results["test_acc"].append(test_acc)
 
-            print(f'Results: train_loss={results["train_loss"][-1]}, train_acc={results["train_acc"][-1]}, val_loss={results["val_loss"][-1]}, val_acc={results["val_acc"][-1]}, test_acc={results["test_acc"][-1]}')
+                print(f'Results: train_loss={results["train_loss"][-1]}, train_acc={results["train_acc"][-1]}, val_loss={results["val_loss"][-1]}, val_acc={results["val_acc"][-1]}, test_acc={results["test_acc"][-1]}')
 
 # Convert results to pandas DataFrame and display as table
 results_df = pd.DataFrame(results)
 print(results_df)
 
 # save results to csv
-results_df.to_csv('graphgenexp_results.csv', index=False)
+results_df.to_csv(f'{saved_dir}/graphgenexp_results.csv', index=False)
