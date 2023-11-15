@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 from torch_geometric.data import Dataset, Data
 import pickle
@@ -25,7 +26,7 @@ class SyntheticGraphDatasetPyG(Dataset):
         graph_adj, motifs, node_features, label = self.data[idx]
 
         # Convert your data to PyTorch Geometric format.
-        edge_index = torch.tensor(graph_adj.nonzero(), dtype=torch.long)
+        edge_index = torch.tensor(np.array(graph_adj.nonzero()), dtype=torch.long)
         x = torch.tensor(list(node_features.values()), dtype=torch.float)
         y = torch.tensor([label], dtype=torch.long)
         data = Data(x=x, edge_index=edge_index, y=y, motifs=motifs)

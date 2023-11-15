@@ -17,6 +17,7 @@ from torch_geometric.nn import GCNConv, GraphConv, ChebConv
 from src.models.graphconv_residualnet import GraphConvResidualNet
 
 
+print("Loading dataset...")
 dataset = SyntheticGraphDatasetPyG('/Users/kumarh/Documents/fall_co-op_2023/experiments/graphGenDataset8000.pkl')
 
 # Split the dataset into training, validation, and testing subsets
@@ -46,10 +47,11 @@ test_loader = DataLoader(test_dataset, batch_size=64)
 
 print('Dataset splits:')
 print(len(train_dataset), len(val_dataset), len(test_dataset))
-# check class-wise distribution of validation set
-for i in train_dataset, val_dataset, test_dataset:
-    labels = [label[1].item() for _,_, label, _ in i]
-    print(Counter(labels))
+print(f'Train: {len(train_dataset)}, Valid: {len(val_dataset)}, Test: {len(test_dataset)}')
+# Check class-wise distribution of each set
+for dname, dset in [('Train', train_dataset), ('Valid', val_dataset), ('Test', test_dataset)]:
+    labels = [label[1].item() for _, _, label, _ in dset]
+    print(f'{dname}:', Counter(labels))
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'device: {device}')
@@ -59,19 +61,22 @@ num_layers = [2, 4]
 conv_types = [GraphConv, GCNConv, ChebConv]
 dropouts = [0, 0.1, 0.4, 0.5, 0.6, 0.8]
 l2_values = [0.00001, 0.0001, 0.001, 0.01, 0.1]
-epochs = 2
+epochs = 50
 
 # Initialize dictionary to store results
 results = {"num_layers": [], "conv_type": [], "dropout": [], "l2": [], "best_model_epoch": [], "train_loss": [], "train_acc": [], "val_loss": [], "val_acc": [], "test_acc": []}
 
 best_model_name = ''
+total_models = len(num_layers) * len(conv_types) * len(dropouts) * len(l2_values)
+model_count = 0
 
 # Iterate over hyperparameters and train model
 for n_layer in num_layers:
     for conv_type in conv_types:
         for dropout in dropouts:
             for l2 in l2_values:
-                print(f"Training model with {n_layer} {conv_type.__name__} convolution, dropout={dropout}, and l2={l2}")
+                model_count += 1
+                print(f"Training #{model_count}/{total_models} model with {n_layer} {conv_type.__name__} convolution, dropout={dropout}, and l2={l2}")
 
                 # Initialize model with current hyperparameters
                 model = GraphConvResidualNet(dim=32, 
@@ -132,7 +137,7 @@ for n_layer in num_layers:
                     if val_accuracy > best_val_accuracy:
                         best_val_accuracy = val_accuracy
                         # Save the best model
-                        best_model_name = f'{saved_dir}/graphgen_model_{n_layer}{conv_type.__name__}_{dropout}_{l2}.pt'
+                        best_model_name = f'{saved_dir}/graphgen_model_{n_layer}_{conv_type.__name__}_{dropout}_{l2}.pt'
                         best_model_epoch = epoch
                         torch.save(model.state_dict(), best_model_name)
 
@@ -144,7 +149,7 @@ for n_layer in num_layers:
 
                 # save metrics to csv
                 metrics_df = pd.DataFrame(metrics)
-                metrics_df.to_csv(f'{saved_dir}/graphgen_metrics_{n_layer}{conv_type.__name__}_{dropout}_{l2}.csv', index=False)
+                metrics_df.to_csv(f'{saved_dir}/graphgen_metrics_{n_layer}_{conv_type.__name__}_{dropout}_{l2}.csv', index=False)
 
                 # Store results for current hyperparameters
                 results["conv_type"].append(conv_type.__name__)
