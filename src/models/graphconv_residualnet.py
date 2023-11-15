@@ -8,7 +8,7 @@ class GraphConvResidualNet(nn.Module):
     """
     A 4-layer graph convolutional network with residual connections.
     """
-    def __init__(self, dim, num_features, num_classes, num_layers=4, conv_type=GraphConv, dropout=0.5):
+    def __init__(self, dim, num_features, num_classes, num_layers=4, conv_type=GraphConv, dropout=0.5, conv_kwargs=None):
         super().__init__()
 
         self.num_features = num_features
@@ -17,39 +17,26 @@ class GraphConvResidualNet(nn.Module):
         self.conv_type = conv_type
         self.dropout = dropout
         self.num_layers = num_layers
+        self.conv_kwargs = conv_kwargs if conv_kwargs is not None else {}
 
         # Create convolution layers dynamically based on the number of layers
         self.conv_layers = nn.ModuleList([
-            self.conv_type(num_features, dim) if i == 0 else self.conv_type(dim, dim)
+            self._create_conv_layer(num_features, dim, **self.conv_kwargs) if i == 0
+            else self._create_conv_layer(dim, dim, **self.conv_kwargs)
             for i in range(num_layers)
         ])
 
         # Create batch normalization layers
         self.bn_layers = nn.ModuleList([nn.BatchNorm1d(dim) for _ in range(num_layers)])
 
-        if conv_type == ChebConv:
-            self.conv1 = self.conv_type(num_features, dim, K=2) # try K=3,
-        else:
-            self.conv1 = self.conv_type(num_features, dim)
-        self.bn1 = nn.BatchNorm1d(dim)
-        if conv_type == ChebConv:
-            self.conv2 = self.conv_type(dim, dim, K=2)
-        else:
-            self.conv2 = self.conv_type(dim, dim)
-        self.bn2 = nn.BatchNorm1d(dim)
-        if conv_type == ChebConv:
-            self.conv3 = self.conv_type(dim, dim, K=2)
-        else:
-            self.conv3 = self.conv_type(dim, dim)
-        self.bn3 = nn.BatchNorm1d(dim)
-        if conv_type == ChebConv:
-            self.conv4 = self.conv_type(dim, dim, K=2)
-        else:
-            self.conv4 = self.conv_type(dim, dim)
-        self.bn4 = nn.BatchNorm1d(dim)
-
         self.lin1 = nn.Linear(dim, dim)
         self.lin2 = nn.Linear(dim, self.num_classes)
+
+    def _create_conv_layer(self, in_channels, out_channels, **kwargs):
+        if self.conv_type == ChebConv:
+            return self.conv_type(in_channels, out_channels, K=kwargs.get('K', 2))
+        else:
+            return self.conv_type(in_channels, out_channels, **kwargs)
 
     def forward(self, x, edge_index, batch, edge_weight=None):
 

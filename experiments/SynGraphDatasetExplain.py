@@ -3,7 +3,7 @@
 # Calculate avg of correlation of all graphs in test set and this to results as new column
 
 import sys
-sys.path.append(".")
+sys.path.append("..")
 
 import os
 import glob
