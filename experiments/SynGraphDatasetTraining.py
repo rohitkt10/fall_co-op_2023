@@ -66,7 +66,7 @@ print(f'device: {device}')
 # Define hyperparameters to iterate over
 num_layers = [2, 4]
 conv_types = [GraphConv, GCNConv, ChebConv]
-dropouts = [0, 0.1, 0.4, 0.5, 0.6, 0.8]
+dropouts = [0.0, 0.1, 0.4, 0.5, 0.6, 0.8]
 l2_values = [0.00001, 0.0001, 0.001, 0.01, 0.1]
 epochs = 50
 

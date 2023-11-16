@@ -7,6 +7,8 @@ sys.path.append("..")
 
 import os
 import glob
+import csv
+from tqdm import tqdm
 import numpy as np
 import pandas as pd
 import torch
@@ -15,7 +17,7 @@ from src.models.graphconv_residualnet import GraphConvResidualNet
 from captum.attr import IntegratedGradients
 from scipy.stats import pearsonr, spearmanr
 
-saved_dir = 'syndata_exp1/'
+saved_dir = '/Users/kumarh/Documents/fall_co-op_2023/experiments/syndata_exp_2023-11-15_19-51-04/'
 
 #load dataset
 print("Loading dataset...")
@@ -40,35 +42,43 @@ def model_forward(mask, data):
         y_list.append(y)
     return torch.stack(y_list).squeeze()
 
-# Initialize results
-results = {"model_name": [],
-           "pearson_corr_avg_class_0": [], "pearson_corr_avg_class_1": [], 
-           "spearman_corr_avg_class_0": [], "spearman_corr_avg_class_1": []}
+# Initialize the CSV file
+training_csv_file = f'{saved_dir}/graphgenexp_results.csv'
+model_data = pd.read_csv(training_csv_file)
+out_csv_file = f'{saved_dir}/graphgenexp_correlation_results.csv'
+csv_exists = os.path.exists(out_csv_file)
 
-model_list = glob.glob(f'{saved_dir}/graphgen_model_*.pt')
+# If the CSV file doesn't exist, create it with header
+with open(out_csv_file, 'a', newline='') as file:
+    writer = csv.writer(file)
+    if not csv_exists:
+        writer.writerow(list(model_data.columns.values) + 
+                        ["pearson_corr_avg_class_0", "pearson_corr_avg_class_1", 
+                         "spearman_corr_avg_class_0", "spearman_corr_avg_class_1"])
 
-# test on all models saved in saved_dir
-for i, model_path in enumerate(model_list):
-    model_name = model_path.split('/')[-1].split('.')[0]
-    n_layer = int(model_name.split('_')[2])
+print(f'Writing results to {out_csv_file}')
+def format_dropout(dropout):
+    if dropout.is_integer():
+        return str(int(dropout))
+    else:
+        return str(dropout)
+    
+for index, row in model_data.iterrows():
+    print(f"Testing #{index+1}/{len(model_data)}: {row['conv_type']} with layers={row['num_layers']}, dropout={row['dropout']}, and l2={row['l2']}")
+    model_path = f'{saved_dir}/graphgen_model_{row["conv_type"]}_{row["num_layers"]}_{format_dropout(row["dropout"])}_{row["l2"]}.pt'
     conv_types = {'GraphConv': GraphConv, 'GCNConv': GCNConv, 'ChebConv': ChebConv}
-    conv_type = conv_types[model_name.split('_')[3]]
-    dropout = float(model_name.split('_')[4])
-    l2 = float(model_name.split('_')[5])
-    print(f"Testing #{i+1}/{len(model_list)} model with {n_layer} {conv_type.__name__} convolution, dropout={dropout}, and l2={l2}")
-
     model = GraphConvResidualNet(dim=32,
                                 num_features=num_features,
                                 num_classes=num_classes,
-                                num_layers=n_layer,
-                                conv_type=conv_type,
-                                dropout=dropout).to(device)
+                                num_layers=row["num_layers"],
+                                conv_type=conv_types[row["conv_type"]],
+                                dropout=row['l2']).to(device)
     model.load_state_dict(torch.load(model_path))
     model.eval()
-    results["model_name"].append(model_name)
 
+    corr_results = {}
     # For each class
-    for class_label in [0, 1]:
+    for class_label in tqdm([0, 1]):
         # For each graph in the test set
         pearson_corrs = []
         spearman_corrs = []
@@ -97,16 +107,12 @@ for i, model_path in enumerate(model_list):
                 spearman_corrs.append(spearman_corr)
 
         # Calculate average correlation across all graphs for the current class
-        avg_pearson_corr = np.mean(pearson_corrs)
-        avg_spearman_corr = np.mean(spearman_corrs)
+        corr_results[f"pearson_corr_avg_class_{class_label}"] = np.mean(pearson_corrs)
+        corr_results[f"spearman_corr_avg_class_{class_label}"] = np.mean(spearman_corrs)
 
-        # Store results for the current model and class
-        results[f"pearson_corr_avg_class_{class_label}"].append(avg_pearson_corr)
-        results[f"spearman_corr_avg_class_{class_label}"].append(avg_spearman_corr)
-
-# Convert results to pandas DataFrame and display as table
-results_df = pd.DataFrame(results)
-print(results_df)
-
-# Save results to csv
-results_df.to_csv(f'{saved_dir}/graphgenexp_results_with_correlation_per_class.csv', index=False)
+    # Append results to CSV
+    with open(out_csv_file, 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(list(row.values) +  
+                         [corr_results[f"pearson_corr_avg_class_0"], corr_results[f"pearson_corr_avg_class_1"],
+                         corr_results[f"spearman_corr_avg_class_0"], corr_results[f"spearman_corr_avg_class_1"]])
