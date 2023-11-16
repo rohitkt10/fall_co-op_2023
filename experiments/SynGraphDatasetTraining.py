@@ -153,7 +153,7 @@ for conv_type in conv_types:
                     if val_accuracy > best_val_accuracy:
                         best_val_accuracy = val_accuracy
                         # Save the best model
-                        best_model_name = f'{saved_dir}/graphgen_model_{n_layer}_{conv_type.__name__}_{dropout}_{l2}.pt'
+                        best_model_name = f'{saved_dir}/graphgen_model_{conv_type.__name__}_{n_layer}_{dropout}_{l2}.pt'
                         best_model_epoch = epoch
                         torch.save(model.state_dict(), best_model_name)
 
@@ -165,7 +165,7 @@ for conv_type in conv_types:
 
                 # save metrics to csv
                 metrics_df = pd.DataFrame(metrics)
-                metrics_df.to_csv(f'{saved_dir}/graphgen_metrics_{n_layer}_{conv_type.__name__}_{dropout}_{l2}.csv', index=False)
+                metrics_df.to_csv(f'{saved_dir}/graphgen_metrics_{conv_type.__name__}_{n_layer}_{dropout}_{l2}.csv', index=False)
 
                 # Load the best model for evaluation
                 model.load_state_dict(torch.load(best_model_name))
