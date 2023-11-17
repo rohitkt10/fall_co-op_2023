@@ -1,6 +1,9 @@
 import sys
-sys.path.append(".")
+sys.path.append("..")
 
+import os
+import csv
+import datetime
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
@@ -28,7 +31,11 @@ num_test = num_samples - num_train - num_val
 
 train_dataset, val_dataset, test_dataset = random_split(dataset, [num_train, num_val, num_test])
 
-saved_dir = 'syndata_exp1/'
+# create folder based on timestamp
+now = datetime.datetime.now()
+timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
+saved_dir = f'syndata_exp_{timestamp}/'
+os.mkdir(saved_dir)
 
 # save dataset
 torch.save(train_dataset, f'{saved_dir}/train_dataset.pt')
@@ -59,24 +66,33 @@ print(f'device: {device}')
 # Define hyperparameters to iterate over
 num_layers = [2, 4]
 conv_types = [GraphConv, GCNConv, ChebConv]
-dropouts = [0, 0.1, 0.4, 0.5, 0.6, 0.8]
+dropouts = [0.0, 0.1, 0.4, 0.5, 0.6, 0.8]
 l2_values = [0.00001, 0.0001, 0.001, 0.01, 0.1]
 epochs = 50
 
-# Initialize dictionary to store results
-results = {"num_layers": [], "conv_type": [], "dropout": [], "l2": [], "best_model_epoch": [], "train_loss": [], "train_acc": [], "val_loss": [], "val_acc": [], "test_acc": []}
+# Initialize the CSV file
+csv_file = f'{saved_dir}/graphgenexp_results.csv'
+csv_exists = os.path.exists(csv_file)
+
+# If the CSV file doesn't exist, create it with header
+with open(csv_file, 'a', newline='') as file:
+    writer = csv.writer(file)
+    if not csv_exists:
+        writer.writerow(["conv_type", "num_layers", "dropout", "l2", "best_model_epoch", "train_loss", "train_acc", "val_loss", "val_acc", "test_acc"])
+
+print(f'Writing overall training results to {csv_file}...')
 
 best_model_name = ''
 total_models = len(num_layers) * len(conv_types) * len(dropouts) * len(l2_values)
 model_count = 0
 
 # Iterate over hyperparameters and train model
-for n_layer in num_layers:
-    for conv_type in conv_types:
+for conv_type in conv_types:
+    for n_layer in num_layers:
         for dropout in dropouts:
             for l2 in l2_values:
                 model_count += 1
-                print(f"Training #{model_count}/{total_models} model with {n_layer} {conv_type.__name__} convolution, dropout={dropout}, and l2={l2}")
+                print(f"Training #{model_count}/{total_models}: {conv_type.__name__} with layers={n_layer}, dropout={dropout}, and l2={l2}")
 
                 # Initialize model with current hyperparameters
                 model = GraphConvResidualNet(dim=32, 
@@ -137,7 +153,7 @@ for n_layer in num_layers:
                     if val_accuracy > best_val_accuracy:
                         best_val_accuracy = val_accuracy
                         # Save the best model
-                        best_model_name = f'{saved_dir}/graphgen_model_{n_layer}_{conv_type.__name__}_{dropout}_{l2}.pt'
+                        best_model_name = f'{saved_dir}/graphgen_model_{conv_type.__name__}_{n_layer}_{dropout}_{l2}.pt'
                         best_model_epoch = epoch
                         torch.save(model.state_dict(), best_model_name)
 
@@ -149,17 +165,7 @@ for n_layer in num_layers:
 
                 # save metrics to csv
                 metrics_df = pd.DataFrame(metrics)
-                metrics_df.to_csv(f'{saved_dir}/graphgen_metrics_{n_layer}_{conv_type.__name__}_{dropout}_{l2}.csv', index=False)
-
-                # Store results for current hyperparameters
-                results["conv_type"].append(conv_type.__name__)
-                results["dropout"].append(dropout)
-                results["l2"].append(l2)
-                results["best_model_epoch"].append(best_model_epoch)
-                results["train_loss"].append(metrics["train_loss"][-1])
-                results["train_acc"].append(metrics["train_acc"][-1])
-                results["val_loss"].append(metrics["val_loss"][-1])
-                results["val_acc"].append(metrics["val_acc"][-1])
+                metrics_df.to_csv(f'{saved_dir}/graphgen_metrics_{conv_type.__name__}_{n_layer}_{dropout}_{l2}.csv', index=False)
 
                 # Load the best model for evaluation
                 model.load_state_dict(torch.load(best_model_name))
@@ -176,13 +182,8 @@ for n_layer in num_layers:
                     return correct / len(loader.dataset)
 
                 test_acc = test(test_loader)
-                results["test_acc"].append(test_acc)
 
-                print(f'Results: train_loss={results["train_loss"][-1]}, train_acc={results["train_acc"][-1]}, val_loss={results["val_loss"][-1]}, val_acc={results["val_acc"][-1]}, test_acc={results["test_acc"][-1]}')
-
-# Convert results to pandas DataFrame and display as table
-results_df = pd.DataFrame(results)
-print(results_df)
-
-# save results to csv
-results_df.to_csv(f'{saved_dir}/graphgenexp_results.csv', index=False)
+                # Append results to CSV
+                with open(csv_file, 'a', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerow([conv_type.__name__, n_layer, dropout, l2, best_model_epoch, metrics["train_loss"][-1], metrics["train_acc"][-1], metrics["val_loss"][-1], metrics["val_acc"][-1], test_acc])
