@@ -11,15 +11,16 @@ logging.basicConfig(filename='graphGenDataset_log.log', level=logging.INFO, forc
 
 
 graph = GraphWithMotifsDataset(
-    num_graphs=12,
-    min_nodes=15,
-    max_nodes=20,
-    base_graph_model='ER',
-    motif_graph_model='BA',
-    p=0.3,
-    m=3,
-    min_motif_size=5,
-    max_motif_size=8,
+    num_graphs=1000,
+    min_nodes=30,
+    max_nodes=40,
+    base_graph_model='BA',
+    motif_graph_model='WS',
+    p=0.1,
+    m=2,
+    k=3,
+    min_motif_size=3,
+    max_motif_size=4,
     min_num_motifs=1,
     max_num_motifs=1,
 )
