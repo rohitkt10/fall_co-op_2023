@@ -226,7 +226,7 @@ class GraphWithMotifs:
         elif graph_model == 'BA':
             return nx.barabasi_albert_graph(n, self.m)
         elif graph_model == 'WS':
-            return nx.watts_strogatz_graph(self.n, self.k, self.p)
+            return nx.watts_strogatz_graph(n, self.k, self.p)
         else:
             logging.warning(f"Invalid graph model: {graph_model}")
             return None
